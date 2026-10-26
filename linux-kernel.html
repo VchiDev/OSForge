@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linux Kernel Tutorial — OSForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">◈ OSForge</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start.html">Tutorial</a>
+    <a href="planner.html">OS Planner</a>
+    <a href="linux-kernel.html">Linux Kernel</a>
+    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="demos.html">Demo OSes</a>
+  </nav>
+</header>
+
+<main class="container">
+  <span class="eyebrow">LINUX DEVELOPMENT TRACK</span>
+  <h1>Build your own Linux-based OS</h1>
+  <p>A Linux-based operating system typically combines the Linux kernel,
+  a root filesystem, system utilities, an init system, and optional
+  applications or a desktop environment.</p>
+
+  <div class="callout">
+    You usually do not need to write a new Linux kernel. Instead, you
+    configure the existing Linux source, add required drivers and patches,
+    build it, and package the complete system.
+  </div>
+
+  <h2>Step 1 — Choose a build system</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Buildroot</h3>
+      <p>Useful for small custom Linux systems. It can build a toolchain,
+      kernel, packages, and root filesystem.</p>
+      <a href="https://buildroot.org/">Official website →</a>
+    </article>
+    <article class="card">
+      <h3>Yocto Project</h3>
+      <p>Useful for customizable, repeatable Linux distributions, especially
+      embedded products.</p>
+      <a href="https://www.yoctoproject.org/">Official website →</a>
+    </article>
+    <article class="card">
+      <h3>Existing distribution</h3>
+      <p>Useful when you want to customize a familiar desktop or server
+      system instead of assembling everything yourself.</p>
+      <a href="https://docs.kernel.org/">Kernel documentation →</a>
+    </article>
+  </div>
+
+  <h2>Step 2 — Prepare your environment</h2>
+  <ol>
+    <li>Choose the target CPU architecture and device or virtual machine.</li>
+    <li>Install the build system's documented prerequisites.</li>
+    <li>Download source from the official project or your distribution.</li>
+    <li>Record the source version and save your configuration.</li>
+  </ol>
+
+  <h2>Step 3 — Configure the kernel</h2>
+  <p>When using a Linux kernel source tree, the usual configuration workflow
+  includes starting from an appropriate baseline and using a configuration
+  interface such as <code>make menuconfig</code>, when supported by your
+  environment.</p>
+  <p>Choose the drivers and kernel options required by the target. Avoid
+  removing essential storage, filesystem, console, or boot support before
+  you understand how the system starts.</p>
+
+  <h2>Step 4 — Compile the kernel</h2>
+  <p>Use the commands documented for your kernel version and build system.
+  Cross-compilation requires the appropriate target compiler and architecture
+  settings. Do not assume a host compiler automatically produces code for
+  a different CPU.</p>
+
+  <h2>Step 5 — Create the root filesystem</h2>
+  <p>The kernel alone is not a complete general-purpose Linux OS. You also
+  need a compatible root filesystem containing the programs and libraries
+  required to start the system.</p>
+  <p>Configure the init system, device management, user accounts, services,
+  and any applications your project needs.</p>
+
+  <h2>Step 6 — Boot and test</h2>
+  <ol>
+    <li>Package the kernel and root filesystem according to the chosen boot workflow.</li>
+    <li>Use a disposable QEMU virtual machine or an appropriate hardware test device.</li>
+    <li>Inspect boot logs and verify storage, networking, drivers, and shutdown.</li>
+    <li>Save the working configuration and record any patches.</li>
+  </ol>
+
+  <div class="callout warning">
+    Linux kernel build commands differ across versions, architectures, and
+    build systems. Follow the official documentation for the exact version
+    you selected instead of mixing instructions from unrelated tutorials.
+  </div>
+
+  <a class="button" href="planner.html">Plan my Linux OS →</a>
+</main>
+
+<footer>OSForge — Configure. Compile. Package. Test.</footer>
+</body>
+</html>
