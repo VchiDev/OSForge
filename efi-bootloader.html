@@ -1,12 +1,14 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EFI Bootloader Lab — OSForge</title>
+  <title>Bootloader Workshop — OSForge</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <header class="topbar">
   <a class="brand" href="index.html">◈ OSForge</a>
   <nav>
@@ -14,106 +16,593 @@
     <a href="start.html">Tutorial</a>
     <a href="planner.html">OS Planner</a>
     <a href="linux-kernel.html">Linux Kernel</a>
-    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="efi-bootloader.html">Bootloader Lab</a>
     <a href="demos.html">Demo OSes</a>
   </nav>
 </header>
 
 <main class="container">
-  <span class="eyebrow">UEFI DEVELOPMENT LAB</span>
-  <h1>Create your own .efi bootloader</h1>
-  <p>A custom EFI application can display a boot menu, read configuration,
-  locate a kernel, collect firmware information, and transfer control to
-  your operating system.</p>
+
+  <span class="eyebrow">OSFORGE HANDS-ON LAB</span>
+  <h1>Build your own bootloader</h1>
+
+  <p>
+    Learn how to create boot software for your own operating system.
+    This workshop covers UEFI applications, legacy BIOS boot sectors,
+    Linux development environments, VS Code, and virtual machine testing.
+  </p>
 
   <div class="callout warning">
-    Test with a virtual machine and a disposable EFI System Partition.
-    Do not replace your computer's working boot files while learning.
+    <strong>Safety first:</strong> Build and test in an emulator using
+    disposable virtual disks. Do not install experimental bootloaders
+    onto your everyday computer's EFI System Partition or physical disk.
   </div>
 
-  <h2>Step 1 — Understand the boot process</h2>
-  <div class="steps">
-    <article class="step"><div>
-      <h3>UEFI firmware</h3>
-      <p>The firmware initializes the platform and loads a compatible EFI
-      application from a boot entry or EFI System Partition.</p>
-    </div></article>
-    <article class="step"><div>
-      <h3>Your EFI loader</h3>
-      <p>The loader can read configuration, locate the kernel, validate its
-      format, and prepare the information required by the kernel.</p>
-    </div></article>
-    <article class="step"><div>
-      <h3>Kernel handoff</h3>
-      <p>The loader transfers control using a defined entry point and
-      documented boot information structure. The kernel then initializes
-      its own execution environment.</p>
-    </div></article>
+  <h2>Choose your boot method</h2>
+
+  <div class="grid">
+
+    <article class="card">
+      <h3>UEFI / EFI</h3>
+      <p>
+        Modern firmware loads a PE/COFF EFI application. Your application
+        can locate a kernel, read configuration, and prepare the handoff
+        to your OS.
+      </p>
+      <p><strong>Tools:</strong> GNU-EFI, GCC, binutils, QEMU, OVMF.</p>
+      <a class="button" href="#uefi">Start UEFI lab →</a>
+    </article>
+
+    <article class="card">
+      <h3>Legacy BIOS</h3>
+      <p>
+        BIOS begins by loading boot code into memory. Learn how a 512-byte
+        boot sector executes and prints a message.
+      </p>
+      <p><strong>Tools:</strong> NASM, QEMU, VS Code.</p>
+      <a class="button" href="#bios">Start BIOS lab →</a>
+    </article>
+
   </div>
 
-  <h2>Step 2 — Select a development language</h2>
-  <article class="card">
-    <h3>C</h3>
-    <p>Use a UEFI-compatible C toolchain and headers. EDK II is a widely
-    used framework for developing UEFI applications and drivers.</p>
-    <a href="https://github.com/tianocore/edk2">EDK II source →</a>
-  </article>
-  <article class="card">
-    <h3>Rust</h3>
-    <p>Use a supported UEFI target and compatible UEFI libraries. Follow
-    the selected project's build instructions and confirm that its output
-    is a firmware-compatible EFI application.</p>
-    <a href="https://www.rust-lang.org/">Rust official website →</a>
-  </article>
+  <h2>Part 1 — Prepare your development environment</h2>
 
-  <h2>Step 3 — Define the loader-to-kernel interface</h2>
-  <p>Before writing the loader, document:</p>
-  <ul>
-    <li>Kernel executable format and architecture.</li>
-    <li>Kernel entry point and calling convention.</li>
-    <li>Memory-map representation and reserved regions.</li>
-    <li>Framebuffer details, if graphics are needed.</li>
-    <li>Firmware tables and boot options passed to the kernel.</li>
-    <li>When and how UEFI boot services are exited.</li>
-  </ul>
+  <h3>Option A: Ubuntu or Debian</h3>
 
-  <h2>Step 4 — Build a minimal EFI application</h2>
+  <p>
+    Open a terminal on Ubuntu or Debian. Update the package index and
+    install the development tools:
+  </p>
+
+  <pre>sudo apt update
+sudo apt install build-essential binutils nasm git make \
+  qemu-system-x86 ovmf gnu-efi mtools dosfstools xorriso</pre>
+
+  <p>
+    The packages provide a compiler, linker, assembler, UEFI development
+    files, and tools for building and testing boot images. Package
+    availability and library locations vary by distribution version.
+  </p>
+
+  <h3>Option B: Windows with WSL</h3>
+
+  <p>Open Windows PowerShell and install Ubuntu:</p>
+
+  <pre>wsl --install Ubuntu</pre>
+
+  <p>
+    Restart Windows if requested. Open Ubuntu and create your Linux
+    username and password. Then run the Ubuntu installation commands
+    shown above inside the Ubuntu terminal.
+  </p>
+
+  <p>
+    Debian can also be installed through WSL. Use the same Debian package
+    commands from its terminal.
+  </p>
+
+  <h3>Install VS Code</h3>
+
   <ol>
-    <li>Install the toolchain and SDK required by your chosen framework.</li>
-    <li>Create an EFI application entry point using that framework's template.</li>
-    <li>Print a message using the provided UEFI console interface.</li>
-    <li>Compile the application for the firmware's architecture.</li>
-    <li>Verify the executable format and output file.</li>
+    <li>Install Visual Studio Code on Windows or Linux.</li>
+    <li>If using WSL, install the Microsoft Remote - WSL extension.</li>
+    <li>Open your Ubuntu or Debian terminal.</li>
+    <li>Create a project folder and open it using <code>code .</code>.</li>
+    <li>Create and edit your source files in VS Code.</li>
+    <li>Run compilation and emulator commands in the integrated terminal.</li>
   </ol>
 
-  <p>For a framework such as EDK II, use its official build system and
-  sample applications rather than assuming a normal desktop executable
-  can be renamed to <code>.efi</code>.</p>
+  <p>
+    Official setup guide:
+    <a href="https://learn.microsoft.com/windows/wsl/tutorials/wsl-vscode">
+      VS Code with WSL
+    </a>.
+  </p>
 
-  <h2>Step 5 — Test in a virtual machine</h2>
-  <ol>
-    <li>Install QEMU and obtain a compatible OVMF UEFI firmware image.</li>
-    <li>Create a disposable FAT-formatted EFI System Partition image.</li>
-    <li>Place your EFI application in the appropriate test boot path.</li>
-    <li>Launch QEMU with UEFI firmware and inspect the console output.</li>
-    <li>Fix errors before adding kernel-loading functionality.</li>
-  </ol>
+  <h3>Create the project folder</h3>
 
-  <h2>Step 6 — Add kernel loading</h2>
-  <p>After the minimal application works, add file discovery, format
-  validation, memory allocation, configuration parsing, diagnostics,
-  and a documented kernel handoff. Follow the UEFI specification when
-  retrieving the final memory map and exiting boot services.</p>
+  <p>Run these commands inside Ubuntu or Debian:</p>
+
+  <pre>mkdir -p ~/osforge-bootlab/uefi
+mkdir -p ~/osforge-bootlab/bios
+cd ~/osforge-bootlab
+code .</pre>
+
+  <p>Your project will eventually look like this:</p>
+
+  <pre>osforge-bootlab/
+├── uefi/
+│   ├── main.c
+│   └── Makefile
+└── bios/
+    └── boot.asm</pre>
 
   <div class="callout">
-    A valid EFI application is not automatically a bootable operating
-    system. Your loader must be compatible with the firmware, and your
-    kernel must implement the agreed handoff contract.
+    <strong>WSL note:</strong> Keep source files inside the Linux home
+    directory, such as <code>~/osforge-bootlab</code>, for a convenient
+    Linux build workflow. QEMU can run Linux-side builds, but graphical
+    emulator support depends on your WSL setup. If necessary, run QEMU
+    natively on Windows or use a Linux virtual machine.
   </div>
 
-  <a class="button" href="start.html">Continue to kernel development →</a>
+  <hr>
+
+  <section id="uefi">
+    <span class="eyebrow">TRACK A</span>
+    <h1>Part 2 — Create a UEFI application</h1>
+
+    <p>
+      In this lab, you will create a real EFI application that displays
+      a message. It is the first step toward a custom bootloader that
+      loads a kernel.
+    </p>
+
+    <h2>Step 1 — Understand the files</h2>
+
+    <ul>
+      <li><code>main.c</code>: your EFI application's entry point.</li>
+      <li><code>Makefile</code>: commands for compiling and linking it.</li>
+      <li><code>BOOTX64.EFI</code>: the final x86-64 EFI application.</li>
+      <li><code>boot.so</code>: an intermediate linked image used by the build.</li>
+    </ul>
+
+    <h2>Step 2 — Write main.c</h2>
+
+    <p>
+      In the <code>uefi</code> directory, create <code>main.c</code>:
+    </p>
+
+    <pre>#include &lt;efi.h&gt;
+#include &lt;efilib.h&gt;
+
+EFI_STATUS EFIAPI efi_main(
+    EFI_HANDLE image_handle,
+    EFI_SYSTEM_TABLE *system_table
+) {
+    InitializeLib(image_handle, system_table);
+
+    Print(L"OSForge UEFI Bootloader Lab\r\n");
+    Print(L"UEFI application started successfully.\r\n");
+    Print(L"Next step: load a kernel image.\r\n");
+
+    return EFI_SUCCESS;
+}</pre>
+
+    <p>
+      This example uses the GNU-EFI headers and library. It is not a
+      normal Linux executable: the UEFI firmware provides the environment
+      in which the application starts.
+    </p>
+
+    <h2>Step 3 — Locate GNU-EFI build files</h2>
+
+    <p>
+      The exact paths depend on your Ubuntu or Debian release and
+      architecture. Find the installed files:
+    </p>
+
+    <pre>dpkg -L gnu-efi | grep -E \
+'crt0-efi-x86_64.o|elf_x86_64_efi.lds|libefi.a|libgnuefi.a'</pre>
+
+    <p>
+      You need the x86-64 startup object, linker script, and both GNU-EFI
+      libraries. If any are missing, check the package installation and
+      ensure you are using an x86-64 development environment.
+    </p>
+
+    <h2>Step 4 — Create the Makefile</h2>
+
+    <p>
+      Create <code>uefi/Makefile</code>. Use the following as a starting
+      point, replacing the example paths with the locations found in
+      Step 3.
+    </p>
+
+    <pre>ARCH = x86_64
+
+EFI_INC = /usr/include/efi
+EFI_ARCH_INC = /usr/include/efi/x86_64
+
+EFI_LIBDIR = /usr/lib
+EFI_LDS = $(EFI_LIBDIR)/elf_x86_64_efi.lds
+EFI_CRT = $(EFI_LIBDIR)/crt0-efi-x86_64.o
+
+CC = gcc
+LD = ld
+OBJCOPY = objcopy
+
+CFLAGS = -I$(EFI_INC) -I$(EFI_ARCH_INC) \
+  -fpic -ffreestanding -fno-stack-protector \
+  -fno-stack-check -fshort-wchar -mno-red-zone \
+  -maccumulate-outgoing-args
+
+all: BOOTX64.EFI
+
+main.o: main.c
+	$(CC) $(CFLAGS) -c main.c -o main.o
+
+boot.so: main.o
+	$(LD) -nostdlib -znocombreloc \
+	  -T $(EFI_LDS) -shared -Bsymbolic \
+	  $(EFI_CRT) main.o -L$(EFI_LIBDIR) \
+	  -lefi -lgnuefi -o boot.so
+
+BOOTX64.EFI: boot.so
+	$(OBJCOPY) \
+	  -j .text -j .sdata -j .data -j .dynamic \
+	  -j .dynsym -j .rel -j .rela -j .reloc \
+	  --target=efi-app-x86_64 boot.so BOOTX64.EFI
+
+clean:
+	rm -f main.o boot.so BOOTX64.EFI
+
+.PHONY: all clean</pre>
+
+    <div class="callout warning">
+      <strong>Important build detail:</strong> GNU-EFI library paths are
+      not identical on every distribution. Some installations put the
+      libraries under an architecture-specific subdirectory. Adjust
+      <code>EFI_LIBDIR</code> and <code>EFI_LDS</code> to match your
+      installed files. The Makefile is for x86-64 UEFI, not ARM64.
+    </div>
+
+    <h2>Step 5 — Compile the EFI application</h2>
+
+    <p>From the UEFI project directory, run:</p>
+
+    <pre>make clean
+make</pre>
+
+    <p>
+      If the build succeeds, the directory should contain
+      <code>BOOTX64.EFI</code>. If linking fails, recheck the library
+      paths and ensure the GNU-EFI package matches the target architecture.
+    </p>
+
+    <p>
+      Verify the resulting file:
+    </p>
+
+    <pre>file BOOTX64.EFI</pre>
+
+    <h2>Step 6 — Prepare a disposable EFI System Partition</h2>
+
+    <p>
+      UEFI firmware typically loads the default removable-media boot
+      application for x86-64 from
+      <code>EFI/BOOT/BOOTX64.EFI</code> on a FAT filesystem.
+    </p>
+
+    <p>
+      The following commands create a small, disposable FAT image. Run
+      them inside the UEFI project directory:
+    </p>
+
+    <pre>mkdir -p esp/EFI/BOOT
+cp BOOTX64.EFI esp/EFI/BOOT/BOOTX64.EFI
+
+dd if=/dev/zero of=uefi.img bs=1M count=64
+mkfs.fat -F 32 uefi.img
+
+mcopy -i uefi.img -s esp/EFI ::/</pre>
+
+    <p>
+      The image is a test disk, not your computer's real EFI partition.
+      Do not substitute a physical disk device for <code>uefi.img</code>.
+    </p>
+
+    <h2>Step 7 — Boot with QEMU and OVMF</h2>
+
+    <p>Locate the installed OVMF firmware files:</p>
+
+    <pre>find /usr/share/OVMF /usr/share/ovmf \
+  -type f 2&gt;/dev/null</pre>
+
+    <p>
+      Identify a compatible x86-64 OVMF code image and, if available,
+      its matching writable variable-store template. File names differ
+      between distributions.
+    </p>
+
+    <p>Launch QEMU using the paths for your installation:</p>
+
+    <pre>qemu-system-x86_64 \
+  -machine q35 \
+  -m 512 \
+  -drive if=pflash,format=raw,readonly=on,file=/PATH/TO/OVMF_CODE.fd \
+  -drive format=raw,file=uefi.img</pre>
+
+    <p>
+      Replace <code>/PATH/TO/OVMF_CODE.fd</code> with the actual firmware
+      path. Some setups also need a writable OVMF variable-store image.
+      Follow the installed OVMF package's guidance if the firmware
+      requires one.
+    </p>
+
+    <p>
+      If the application starts, you should see the OSForge messages in
+      the virtual machine. If not, check that the EFI file is in the
+      correct directory, the firmware architecture matches, and the
+      image contains a readable FAT filesystem.
+    </p>
+
+    <h2>Step 8 — Turn the application into a bootloader</h2>
+
+    <p>
+      Printing a message is only the first milestone. A real kernel-loading
+      bootloader must also:
+    </p>
+
+    <ol>
+      <li>Find the kernel file and validate its format.</li>
+      <li>Read the kernel image into suitable memory.</li>
+      <li>Prepare a documented boot-information structure.</li>
+      <li>Collect required firmware information, including the memory map.</li>
+      <li>Handle UEFI boot-service shutdown correctly before transferring control.</li>
+      <li>Jump to the kernel using the agreed entry point and calling convention.</li>
+    </ol>
+
+    <p>
+      Kernel loading is architecture- and executable-format-specific.
+      Do not jump to an arbitrary file address and assume it is executable.
+    </p>
+
+    <p>
+      Official reference:
+      <a href="https://uefi.org/specifications">UEFI specifications</a>.
+    </p>
+  </section>
+
+  <hr>
+
+  <section id="bios">
+    <span class="eyebrow">TRACK B</span>
+    <h1>Part 3 — Create a BIOS boot sector</h1>
+
+    <p>
+      Legacy BIOS uses a different startup process from UEFI. For this
+      beginner lab, you will write a 16-bit x86 boot sector with NASM.
+      It prints a message using BIOS video services and then stops.
+    </p>
+
+    <h2>Step 1 — Create boot.asm</h2>
+
+    <p>
+      Open the <code>bios</code> directory in VS Code and create
+      <code>boot.asm</code>:
+    </p>
+
+    <pre>bits 16
+org 0x7C00
+
+start:
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov sp, 0x7C00
+
+    mov si, message
+
+print_character:
+    lodsb
+    test al, al
+    jz finished
+
+    mov ah, 0x0E
+    int 0x10
+    jmp print_character
+
+finished:
+    cli
+halt:
+    hlt
+    jmp halt
+
+message db 'OSForge BIOS Bootloader!', 13, 10
+        db 'The boot sector is running.', 0
+
+times 510 - ($ - $$) db 0
+dw 0xAA55</pre>
+
+    <p>
+      This program assumes the traditional BIOS boot-sector environment.
+      The signature <code>0xAA55</code> occupies the final two bytes in
+      little-endian form. The sector is padded to 512 bytes.
+    </p>
+
+    <h2>Step 2 — Assemble the boot sector</h2>
+
+    <p>Run these commands inside the BIOS project directory:</p>
+
+    <pre>nasm -f bin boot.asm -o boot.bin
+file boot.bin
+wc -c boot.bin</pre>
+
+    <p>
+      The final command should report 512 bytes. If NASM reports an error,
+      check the source file and make sure you installed NASM.
+    </p>
+
+    <h2>Step 3 — Test with QEMU</h2>
+
+    <p>Run the boot sector as a virtual floppy image:</p>
+
+    <pre>qemu-system-i386 \
+  -drive file=boot.bin,format=raw,if=floppy</pre>
+
+    <p>
+      A QEMU window should display the OSForge BIOS message. The CPU then
+      halts in a loop, leaving the message on screen.
+    </p>
+
+    <h2>Step 4 — Understand the limitations</h2>
+
+    <p>
+      This is a real boot sector, but it is not yet a full kernel loader.
+      It depends on BIOS services, runs in 16-bit real mode, and does
+      not load a separate kernel.
+    </p>
+
+    <p>
+      The next stages are:
+    </p>
+
+    <ol>
+      <li>Read additional disk sectors using appropriate BIOS disk services.</li>
+      <li>Load a second-stage bootloader into memory.</li>
+      <li>Collect hardware and memory information.</li>
+      <li>Prepare a protected-mode or long-mode transition as required.</li>
+      <li>Load and enter a kernel using a defined memory layout and interface.</li>
+    </ol>
+
+    <div class="callout warning">
+      The BIOS disk, CPU-mode, and memory-transition stages are more
+      advanced than printing a message. Build and verify each stage
+      separately before trying to start a 32-bit or 64-bit kernel.
+    </div>
+
+    <h2>Alternative: Use GRUB for a kernel project</h2>
+
+    <p>
+      If your main goal is to develop a kernel rather than implement every
+      bootloader stage, consider using GRUB with a documented Multiboot
+      protocol. GRUB can handle much of the low-level boot process while
+      you focus on kernel development.
+    </p>
+
+    <p>
+      Learn more:
+      <a href="https://www.gnu.org/software/grub/manual/grub/">
+        Official GNU GRUB manual
+      </a>.
+    </p>
+  </section>
+
+  <hr>
+
+  <h2>Part 4 — QEMU versus VirtualBox</h2>
+
+  <div class="grid">
+    <article class="card">
+      <h3>QEMU</h3>
+      <p>
+        Best for quick iteration from the terminal, repeatable boot
+        commands, serial logs, and debugger integration.
+      </p>
+      <p>
+        UEFI testing uses OVMF; legacy BIOS testing uses the emulator's
+        BIOS firmware.
+      </p>
+      <a href="https://www.qemu.org/docs/master/">
+        QEMU documentation →
+      </a>
+    </article>
+
+    <article class="card">
+      <h3>VirtualBox</h3>
+      <p>
+        Useful for testing a disk image through a graphical virtual
+        machine interface.
+      </p>
+      <p>
+        Create a new disposable VM, choose the intended architecture,
+        attach the boot image using the appropriate virtual storage
+        configuration, and select EFI firmware when testing UEFI.
+      </p>
+      <a href="https://www.virtualbox.org/manual/">
+        VirtualBox manual →
+      </a>
+    </article>
+  </div>
+
+  <p>
+    For a raw BIOS boot-sector image, QEMU is usually the simpler first
+    test. VirtualBox workflows can require a disk image with the expected
+    virtual drive layout. For UEFI, the image must include the appropriate
+    EFI executable and filesystem layout.
+  </p>
+
+  <h2>Part 5 — Troubleshooting</h2>
+
+  <div class="card">
+    <h3>QEMU says the boot image cannot be found</h3>
+    <p>
+      Check the current directory and confirm that the output file exists.
+      Use an absolute path if necessary.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>UEFI firmware does not launch the application</h3>
+    <p>
+      Check the EFI architecture, PE/COFF output, FAT image, and
+      <code>EFI/BOOT/BOOTX64.EFI</code> path. Review the OVMF firmware
+      configuration and any Secure Boot restrictions.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>GNU-EFI linking fails</h3>
+    <p>
+      Confirm that the GNU-EFI headers, startup object, linker script,
+      and libraries are installed. Update the Makefile paths to match
+      the files on your distribution.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>BIOS boot sector does not print</h3>
+    <p>
+      Verify the 512-byte output size and final boot signature. Ensure
+      QEMU is using the image as a floppy and that the source uses
+      16-bit instructions with the expected load address.
+    </p>
+  </div>
+
+  <h2>Workshop completion checklist</h2>
+
+  <ul>
+    <li>Installed a Linux development environment.</li>
+    <li>Opened the project in VS Code.</li>
+    <li>Compiled a UEFI application.</li>
+    <li>Tested the UEFI application with virtual firmware.</li>
+    <li>Assembled a 512-byte BIOS boot sector.</li>
+    <li>Booted the BIOS sector in QEMU.</li>
+    <li>Understood the next steps for loading a real kernel.</li>
+  </ul>
+
+  <div class="actions">
+    <a class="button" href="start.html">Continue to kernel development →</a>
+    <a class="button secondary" href="demos.html">Explore demo OSes</a>
+  </div>
+
 </main>
 
-<footer>OSForge — Your loader, your boot process.</footer>
+<footer>
+  OSForge — Understand the boot process. Build it. Test it virtually.
+</footer>
+
 </body>
 </html>
+```
