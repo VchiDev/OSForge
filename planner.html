@@ -1,0 +1,98 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OS Planner — OSForge</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">◈ OSForge</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start.html">Tutorial</a>
+    <a href="planner.html">OS Planner</a>
+    <a href="linux-kernel.html">Linux Kernel</a>
+    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="demos.html">Demo OSes</a>
+  </nav>
+</header>
+
+<main class="container">
+  <span class="eyebrow">DESIGN YOUR DEVELOPMENT PATH</span>
+  <h1>What kind of OS do you want?</h1>
+  <p>Describe your goal and OSForge will suggest the order in which to
+  learn and build the major components.</p>
+
+  <form id="needs-form" class="card">
+    <div class="field">
+      <label for="kernel">Kernel type</label>
+      <select id="kernel">
+        <option value="linux">Linux-based kernel / distribution</option>
+        <option value="custom">Custom kernel from scratch</option>
+        <option value="unsure">Not sure yet</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="purpose">Main purpose</label>
+      <select id="purpose">
+        <option value="learning">Learning OS development</option>
+        <option value="desktop">Desktop operating system</option>
+        <option value="server">Server operating system</option>
+        <option value="embedded">Embedded or appliance OS</option>
+        <option value="retro">Retro or experimental OS</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="architecture">Target architecture</label>
+      <select id="architecture">
+        <option value="x86_64">x86_64</option>
+        <option value="x86">32-bit x86</option>
+        <option value="arm64">ARM64 / AArch64</option>
+        <option value="unknown">Help me choose</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="firmware">Boot method</label>
+      <select id="firmware">
+        <option value="uefi">UEFI</option>
+        <option value="bios">Legacy BIOS</option>
+        <option value="either">No preference</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="language">Main implementation language</label>
+      <select id="language">
+        <option value="c">C with assembly where necessary</option>
+        <option value="rust">Rust with assembly where necessary</option>
+        <option value="cpp">C++ with assembly where necessary</option>
+        <option value="linux">Use existing Linux source and tools</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="level">Experience</label>
+      <select id="level">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Some programming experience</option>
+        <option value="advanced">Experienced developer</option>
+      </select>
+    </div>
+
+    <button class="button" type="submit">Generate my roadmap</button>
+  </form>
+
+  <section id="plan-result" class="result" hidden aria-live="polite"></section>
+</main>
+
+<footer>OSForge — Your requirements determine your roadmap.</footer>
+</body>
+</html>
+```
