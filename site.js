@@ -1,4 +1,3 @@
-```javascript
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -137,4 +136,3 @@ document.addEventListener("DOMContentLoaded", () => {
     result.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
-```
