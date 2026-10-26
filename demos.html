@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo OS Gallery — OSForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">◈ OSForge</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start.html">Tutorial</a>
+    <a href="planner.html">OS Planner</a>
+    <a href="linux-kernel.html">Linux Kernel</a>
+    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="demos.html">Demo OSes</a>
+  </nav>
+</header>
+
+<main class="container">
+  <span class="eyebrow">THE OSFORGE LABORATORY</span>
+  <h1>Explore demo operating systems</h1>
+  <p>Pick an example to learn a specific part of operating system development.
+  Each demo describes its objective, recommended approach, and next steps.</p>
+
+  <div class="grid">
+    <article class="card">
+      <h3>🟢 Boot-to-Text</h3>
+      <p><strong>Level:</strong> Beginner</p>
+      <p>Build a tiny kernel that starts and prints a diagnostic message.</p>
+      <p><strong>Learn:</strong> Boot process, linker, output, emulator debugging.</p>
+      <a class="button secondary" href="start.html">Open tutorial</a>
+    </article>
+
+    <article class="card">
+      <h3>🐧 Mini Linux</h3>
+      <p><strong>Level:</strong> Beginner to intermediate</p>
+      <p>Assemble a minimal Linux-based system with a root filesystem.</p>
+      <p><strong>Learn:</strong> Kernel configuration, init, utilities, image building.</p>
+      <a class="button secondary" href="linux-kernel.html">Open tutorial</a>
+    </article>
+
+    <article class="card">
+      <h3>⚙️ EFI Loader Lab</h3>
+      <p><strong>Level:</strong> Intermediate</p>
+      <p>Create a UEFI application that prints a message and later loads a kernel.</p>
+      <p><strong>Learn:</strong> UEFI, EFI applications, memory maps, handoff.</p>
+      <a class="button secondary" href="efi-bootloader.html">Open tutorial</a>
+    </article>
+
+    <article class="card">
+      <h3>🖥️ Framebuffer OS</h3>
+      <p><strong>Level:</strong> Intermediate</p>
+      <p>Extend a bootable kernel with a simple graphical display.</p>
+      <p><strong>Learn:</strong> Framebuffers, pixels, keyboard input, drawing.</p>
+      <a class="button secondary" href="start.html">Start building</a>
+    </article>
+
+    <article class="card">
+      <h3>📟 Embedded Monitor</h3>
+      <p><strong>Level:</strong> Intermediate</p>
+      <p>Create a small system focused on one target device or emulator.</p>
+      <p><strong>Learn:</strong> Cross-compilation, serial diagnostics, device drivers.</p>
+      <a class="button secondary" href="planner.html">Plan this OS</a>
+    </article>
+
+    <article class="card">
+      <h3>🧠 Memory Lab</h3>
+      <p><strong>Level:</strong> Advanced</p>
+      <p>Experiment with physical page allocation and virtual memory in a test kernel.</p>
+      <p><strong>Learn:</strong> Page tables, allocators, address spaces, fault diagnosis.</p>
+      <a class="button secondary" href="glossary.html">Review concepts</a>
+    </article>
+
+    <article class="card">
+      <h3>🌅 Dawn OS Blueprint</h3>
+      <p><strong>Level:</strong> Advanced</p>
+      <p>Plan a custom kernel, boot process, graphical shell, and startup sequence.</p>
+      <p><strong>Learn:</strong> System architecture, kernel interfaces, graphics, services.</p>
+      <a class="button secondary" href="planner.html">Create a roadmap</a>
+    </article>
+
+    <article class="card">
+      <h3>🌐 Server OS Blueprint</h3>
+      <p><strong>Level:</strong> Advanced</p>
+      <p>Plan a Linux-based server system with networking, services, logging, and security updates.</p>
+      <p><strong>Learn:</strong> Service management, permissions, network configuration.</p>
+      <a class="button secondary" href="linux-kernel.html">Open Linux guide</a>
+    </article>
+
+    <article class="card">
+      <h3>🧪 Your Own Demo</h3>
+      <p>Define a purpose, target architecture, kernel approach, and first milestone.</p>
+      <p>Use the planner to turn your idea into an ordered development path.</p>
+      <a class="button" href="planner.html">Design a project →</a>
+    </article>
+  </div>
+
+  <div class="callout">
+    These entries are learning blueprints, not claims that working binaries
+    already exist. Build and test each project before treating it as a usable OS.
+  </div>
+</main>
+
+<footer>OSForge — Explore an idea. Understand the design. Build it yourself.</footer>
+</body>
+</html>
