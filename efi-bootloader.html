@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EFI Bootloader Lab — OSForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">◈ OSForge</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start.html">Tutorial</a>
+    <a href="planner.html">OS Planner</a>
+    <a href="linux-kernel.html">Linux Kernel</a>
+    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="demos.html">Demo OSes</a>
+  </nav>
+</header>
+
+<main class="container">
+  <span class="eyebrow">UEFI DEVELOPMENT LAB</span>
+  <h1>Create your own .efi bootloader</h1>
+  <p>A custom EFI application can display a boot menu, read configuration,
+  locate a kernel, collect firmware information, and transfer control to
+  your operating system.</p>
+
+  <div class="callout warning">
+    Test with a virtual machine and a disposable EFI System Partition.
+    Do not replace your computer's working boot files while learning.
+  </div>
+
+  <h2>Step 1 — Understand the boot process</h2>
+  <div class="steps">
+    <article class="step"><div>
+      <h3>UEFI firmware</h3>
+      <p>The firmware initializes the platform and loads a compatible EFI
+      application from a boot entry or EFI System Partition.</p>
+    </div></article>
+    <article class="step"><div>
+      <h3>Your EFI loader</h3>
+      <p>The loader can read configuration, locate the kernel, validate its
+      format, and prepare the information required by the kernel.</p>
+    </div></article>
+    <article class="step"><div>
+      <h3>Kernel handoff</h3>
+      <p>The loader transfers control using a defined entry point and
+      documented boot information structure. The kernel then initializes
+      its own execution environment.</p>
+    </div></article>
+  </div>
+
+  <h2>Step 2 — Select a development language</h2>
+  <article class="card">
+    <h3>C</h3>
+    <p>Use a UEFI-compatible C toolchain and headers. EDK II is a widely
+    used framework for developing UEFI applications and drivers.</p>
+    <a href="https://github.com/tianocore/edk2">EDK II source →</a>
+  </article>
+  <article class="card">
+    <h3>Rust</h3>
+    <p>Use a supported UEFI target and compatible UEFI libraries. Follow
+    the selected project's build instructions and confirm that its output
+    is a firmware-compatible EFI application.</p>
+    <a href="https://www.rust-lang.org/">Rust official website →</a>
+  </article>
+
+  <h2>Step 3 — Define the loader-to-kernel interface</h2>
+  <p>Before writing the loader, document:</p>
+  <ul>
+    <li>Kernel executable format and architecture.</li>
+    <li>Kernel entry point and calling convention.</li>
+    <li>Memory-map representation and reserved regions.</li>
+    <li>Framebuffer details, if graphics are needed.</li>
+    <li>Firmware tables and boot options passed to the kernel.</li>
+    <li>When and how UEFI boot services are exited.</li>
+  </ul>
+
+  <h2>Step 4 — Build a minimal EFI application</h2>
+  <ol>
+    <li>Install the toolchain and SDK required by your chosen framework.</li>
+    <li>Create an EFI application entry point using that framework's template.</li>
+    <li>Print a message using the provided UEFI console interface.</li>
+    <li>Compile the application for the firmware's architecture.</li>
+    <li>Verify the executable format and output file.</li>
+  </ol>
+
+  <p>For a framework such as EDK II, use its official build system and
+  sample applications rather than assuming a normal desktop executable
+  can be renamed to <code>.efi</code>.</p>
+
+  <h2>Step 5 — Test in a virtual machine</h2>
+  <ol>
+    <li>Install QEMU and obtain a compatible OVMF UEFI firmware image.</li>
+    <li>Create a disposable FAT-formatted EFI System Partition image.</li>
+    <li>Place your EFI application in the appropriate test boot path.</li>
+    <li>Launch QEMU with UEFI firmware and inspect the console output.</li>
+    <li>Fix errors before adding kernel-loading functionality.</li>
+  </ol>
+
+  <h2>Step 6 — Add kernel loading</h2>
+  <p>After the minimal application works, add file discovery, format
+  validation, memory allocation, configuration parsing, diagnostics,
+  and a documented kernel handoff. Follow the UEFI specification when
+  retrieving the final memory map and exiting boot services.</p>
+
+  <div class="callout">
+    A valid EFI application is not automatically a bootable operating
+    system. Your loader must be compatible with the firmware, and your
+    kernel must implement the agreed handoff contract.
+  </div>
+
+  <a class="button" href="start.html">Continue to kernel development →</a>
+</main>
+
+<footer>OSForge — Your loader, your boot process.</footer>
+</body>
+</html>
