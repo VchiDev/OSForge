@@ -1,0 +1,124 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guided OS Tutorial — OSForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">◈ OSForge</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start.html">Tutorial</a>
+    <a href="planner.html">OS Planner</a>
+    <a href="linux-kernel.html">Linux Kernel</a>
+    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="demos.html">Demo OSes</a>
+  </nav>
+</header>
+
+<main class="container">
+  <span class="eyebrow">BEGINNER TO KERNEL DEVELOPER</span>
+  <h1>Build your first operating system</h1>
+  <p>Follow these stages in order. The goal of your first project is not to
+  recreate Windows or Linux immediately. It is to boot a small kernel,
+  understand how it works, and gradually add capabilities.</p>
+
+  <div class="callout warning">
+    <strong>Important:</strong> Use a virtual machine for early experiments.
+    Never overwrite your normal computer's bootloader or test experimental
+    kernels on important data.
+  </div>
+
+  <h2>Stage 1 — Decide what you are building</h2>
+  <div class="steps">
+    <article class="step"><div>
+      <h3>Choose your kernel approach</h3>
+      <p><strong>Linux-based:</strong> Start with the Linux kernel and add
+      a root filesystem, utilities, and optionally a desktop.</p>
+      <p><strong>From scratch:</strong> Write your own kernel in C or Rust,
+      with assembly where needed. This teaches more low-level fundamentals
+      but requires substantially more work.</p>
+    </div></article>
+    <article class="step"><div>
+      <h3>Select your target</h3>
+      <p>For a first hobby kernel, x86_64 is a common target. Record the
+      architecture, firmware type (UEFI or BIOS), compiler, and emulator
+      before choosing build instructions.</p>
+    </div></article>
+  </div>
+
+  <h2>Stage 2 — Install your development tools</h2>
+  <p>For a from-scratch C/assembly kernel, you typically need:</p>
+  <ul>
+    <li>Git for source control.</li>
+    <li>An assembler such as NASM, if your boot path uses NASM.</li>
+    <li>A suitable compiler and linker, preferably a target-aware
+    cross-toolchain for a freestanding kernel.</li>
+    <li>Make or another build system.</li>
+    <li>QEMU for virtual machine testing.</li>
+    <li>A debugger such as GDB for investigating crashes.</li>
+  </ul>
+  <p>On Windows, WSL2 with a Linux development environment is often a
+  convenient route for following Unix-oriented OS development tutorials.
+  Native Windows toolchains are possible, but their commands and paths
+  may differ.</p>
+
+  <h2>Stage 3 — Create your project</h2>
+  <p>Make a project directory with this structure:</p>
+  <pre>MyOS/
+├── boot/
+├── kernel/
+├── include/
+├── linker/
+├── build/
+├── Makefile
+└── README.md</pre>
+  <p>Keep source files separate from generated output. The exact files
+  depend on whether you use an existing boot protocol, a custom EFI
+  loader, or a Linux-based build system.</p>
+
+  <h2>Stage 4 — Define how the kernel starts</h2>
+  <p>The bootloader and kernel must agree on the entry point and any
+  information passed at startup. That information may include the memory
+  map, framebuffer, firmware tables, and boot options.</p>
+  <p>For a modern UEFI project, you can write an EFI loader that loads
+  a kernel image. Alternatively, use a documented existing boot protocol
+  to reduce the amount of bootloader code you must write.</p>
+
+  <h2>Stage 5 — Compile and link</h2>
+  <p>Use a linker script or the linker configuration appropriate for your
+  kernel format. Check the output architecture, entry point, and section
+  addresses. A compiler reporting success does not guarantee that the
+  result is bootable.</p>
+  <p>Keep a record of the compiler version, target triple, linker options,
+  source revision, and build command so you can reproduce the build.</p>
+
+  <h2>Stage 6 — Boot in a virtual machine</h2>
+  <p>Start with a small, verifiable milestone: boot successfully and print
+  a message through serial output or a framebuffer. Inspect emulator logs
+  and use a debugger if the kernel stops unexpectedly.</p>
+
+  <h2>Stage 7 — Expand the kernel</h2>
+  <div class="grid">
+    <article class="card"><h3>CPU exceptions</h3><p>Handle faults and record diagnostic information.</p></article>
+    <article class="card"><h3>Memory management</h3><p>Introduce physical allocation and virtual memory.</p></article>
+    <article class="card"><h3>Interrupts and timers</h3><p>Handle hardware events and measure elapsed time.</p></article>
+    <article class="card"><h3>Scheduling</h3><p>Move from one execution path toward multiple tasks.</p></article>
+    <article class="card"><h3>Drivers and storage</h3><p>Add hardware support and a filesystem.</p></article>
+    <article class="card"><h3>User space</h3><p>Introduce system calls, programs, and a shell.</p></article>
+  </div>
+
+  <div class="actions">
+    <a class="button" href="planner.html">Create my OS roadmap →</a>
+    <a class="button secondary" href="demos.html">Explore demo projects</a>
+  </div>
+</main>
+
+<footer>OSForge — Build carefully. Test virtually. Learn every layer.</footer>
+</body>
+</html>
+```
