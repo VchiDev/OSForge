@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="OSForge UEFI and BIOS bootloader development lab. Learn to build bootloaders with Ubuntu, Debian, WSL, VS Code, and QEMU.">
+  <meta name="description" content="OSForge UEFI and BIOS bootloader development tutorial using Ubuntu, Debian, WSL, VS Code, and QEMU.">
   <title>UEFI &amp; BIOS Bootloader Lab | OSForge</title>
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -12,22 +12,16 @@
       margin: 0 auto;
       padding: 28px 0 60px;
     }
-    .lab-hero {
-      padding: 32px;
-      border: 1px solid var(--border-color, #303746);
-      border-radius: 18px;
-      background: var(--card-bg, #151b27);
-      margin-bottom: 28px;
-    }
-    .lab-hero h1 { margin-top: 0; }
-    .lab-section {
-      margin: 24px 0;
+    .lab-hero, .lab-section {
       padding: 24px;
       border: 1px solid var(--border-color, #303746);
       border-radius: 14px;
       background: var(--card-bg, #151b27);
-      scroll-margin-top: 24px;
+      margin-bottom: 24px;
     }
+    .lab-hero { padding: 32px; }
+    .lab-hero h1 { margin-top: 0; }
+    .lab-section { scroll-margin-top: 24px; }
     .lab-section h2 { margin-top: 0; }
     .lab-section h3 { margin-top: 26px; }
     .lab-container pre {
@@ -41,24 +35,21 @@
     }
     .lab-container code {
       font-family: Consolas, "Courier New", monospace;
-      font-size: 0.92em;
+      font-size: .92em;
     }
-    .lab-container p, .lab-container li {
-      line-height: 1.7;
+    .lab-container p, .lab-container li { line-height: 1.7; }
+    .lab-note, .lab-warning {
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 18px 0;
     }
     .lab-note {
-      padding: 14px 16px;
       border-left: 4px solid #7c8cff;
       background: var(--note-bg, #20283a);
-      border-radius: 6px;
-      margin: 18px 0;
     }
     .lab-warning {
-      padding: 14px 16px;
       border-left: 4px solid #f0ad4e;
       background: var(--note-bg, #20283a);
-      border-radius: 6px;
-      margin: 18px 0;
     }
     .lab-nav {
       display: flex;
@@ -66,7 +57,7 @@
       gap: 10px;
       margin: 20px 0;
     }
-    .lab-nav a, .lab-button {
+    .lab-nav a {
       display: inline-block;
       padding: 10px 15px;
       border-radius: 8px;
@@ -74,17 +65,6 @@
       border: 1px solid var(--border-color, #303746);
     }
     .lab-container a { overflow-wrap: anywhere; }
-    .lab-container table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0;
-    }
-    .lab-container th, .lab-container td {
-      border: 1px solid var(--border-color, #303746);
-      padding: 10px;
-      text-align: left;
-    }
-    .lab-container th { font-weight: 700; }
     .lab-checklist li { margin: 8px 0; }
   </style>
 </head>
@@ -108,7 +88,7 @@
     <section class="lab-hero">
       <p>OSFORGE DEVELOPMENT LAB</p>
       <h1>UEFI &amp; BIOS Bootloader Lab</h1>
-      <p>Learn how to build a UEFI application and a legacy BIOS boot sector using Ubuntu, Debian, Windows Subsystem for Linux (WSL), Visual Studio Code, and QEMU.</p>
+      <p>Learn how to build and test a UEFI application and a legacy BIOS boot sector using Ubuntu, Debian, WSL, Visual Studio Code, and QEMU.</p>
       <div class="lab-nav">
         <a href="#uefi">UEFI tutorial</a>
         <a href="#bios">BIOS tutorial</a>
@@ -117,45 +97,42 @@
       <div class="lab-note">
         <strong>What you'll build:</strong> a UEFI application named
         <code>BOOTX64.EFI</code> and a 512-byte BIOS boot sector named
-        <code>boot.bin</code>. These are introductory boot demonstrations, not complete operating-system loaders.
+        <code>boot.bin</code>. These introductory examples do not yet load a separate OS kernel.
       </div>
     </section>
 
     <section class="lab-section" id="setup">
       <h2>1. Set up your development environment</h2>
-      <p>You can follow this lab on Ubuntu, Debian, or Ubuntu running under WSL on Windows.</p>
+      <p>Use Ubuntu, Debian, or Ubuntu running under Windows Subsystem for Linux (WSL).</p>
 
-      <h3>Install the development tools</h3>
-      <p>Run these commands in the Ubuntu or Debian terminal:</p>
+      <h3>Install the tools</h3>
       <pre><code>sudo apt update
 sudo apt install build-essential binutils nasm git make 
-  qemu-system-x86 ovmf gnu-efi mtools dosfstools</code></pre>
+  qemu-system-x86 ovmf gnu-efi mtools dosfstools python3</code></pre>
 
       <h3>Using WSL on Windows</h3>
-      <p>Open Windows PowerShell and install Ubuntu if necessary:</p>
+      <p>In Windows PowerShell, install Ubuntu if necessary:</p>
       <pre><code>wsl --install Ubuntu</code></pre>
-      <p>Restart Windows if requested, open Ubuntu, and complete its initial setup.</p>
-      <p>Install Visual Studio Code on Windows, then install Microsoft's WSL extension. In the Ubuntu terminal, you can open the current Linux directory in VS Code with:</p>
+      <p>Restart if requested, launch Ubuntu, and finish its initial setup. Install Visual Studio Code on Windows and add Microsoft's WSL extension. From the Ubuntu terminal, open your current Linux directory with:</p>
       <pre><code>code .</code></pre>
 
       <div class="lab-warning">
-        <strong>Important:</strong> Run Linux build commands in the Ubuntu/Debian terminal, not directly in PowerShell. Keep your project inside the Linux filesystem, such as <code>/home/your-user/osforge-bootlab</code>.
+        Run Linux commands in the Ubuntu/Debian terminal, not directly in PowerShell. Keep this project inside your Linux home directory.
       </div>
     </section>
 
     <section class="lab-section" id="uefi">
       <h2>2. UEFI bootloader tutorial</h2>
-      <p>UEFI applications run under UEFI firmware. On x86-64 systems, removable-media boot commonly looks for <code>EFI/BOOT/BOOTX64.EFI</code> on a FAT-formatted partition.</p>
+      <p>UEFI applications run under UEFI firmware. On x86-64 removable-media boot, the standard fallback path is <code>EFI/BOOT/BOOTX64.EFI</code> on a supported FAT filesystem.</p>
 
       <h3>Step 1 — Create the project directory</h3>
-      <p>Copy and run this complete command block:</p>
       <pre><code>mkdir -p ~/osforge-bootlab/uefi
 cd ~/osforge-bootlab/uefi
 pwd</code></pre>
-      <p>The printed path should end in <code>osforge-bootlab/uefi</code>. Every UEFI source file in this lab must be created in this directory.</p>
+      <p>The displayed path should end in <code>osforge-bootlab/uefi</code>. Create both files in this directory.</p>
 
       <h3>Step 2 — Create <code>main.c</code></h3>
-      <p>Use the following command to create the source file directly in the correct folder. Copy the whole block, including both lines containing <code>EOF</code>:</p>
+      <p>Copy and run the entire block, including the final <code>EOF</code> line:</p>
       <pre><code>cat &gt; main.c &lt;&lt;'EOF'
 #include &lt;efi.h&gt;
 #include &lt;efilib.h&gt;
@@ -173,23 +150,27 @@ EFI_STATUS EFIAPI efi_main(
     return EFI_SUCCESS;
 }
 EOF</code></pre>
-      <p>Verify that the file exists:</p>
+      <p>Verify the source file:</p>
       <pre><code>ls -l main.c</code></pre>
 
-      <h3>Step 3 — Locate the GNU-EFI files</h3>
-      <p>Find the startup object, linker script, and libraries installed by your distribution:</p>
+      <h3>Step 3 — Check GNU-EFI</h3>
       <pre><code>dpkg -L gnu-efi | grep -E \
 'crt0-efi-x86_64.o|elf_x86_64_efi.lds|libefi.a|libgnuefi.a'</code></pre>
-      <p>If no files are listed, try reinstalling the package:</p>
+      <p>If the files are not listed, try:</p>
       <pre><code>sudo apt update
 sudo apt install --reinstall gnu-efi</code></pre>
 
-      <h3>Step 4 — Create the <code>Makefile</code></h3>
+      <h3>Step 4 — Generate the <code>Makefile</code> safely</h3>
       <div class="lab-warning">
-        <strong>This step fixes the common “no makefile found” error.</strong> The filename must be exactly <code>Makefile</code>, with a capital M and no <code>.txt</code> extension. Run this command while inside <code>~/osforge-bootlab/uefi</code>.
+        <strong>Important fix:</strong> GNU Make requires a real TAB at the beginning of each recipe line. If an editor changes tabs to spaces, the build fails with <code>missing separator</code>. Instead of typing or pasting a Makefile with fragile indentation, use Python to generate it correctly.
       </div>
-      <pre><code>cat &gt; Makefile &lt;&lt;'EOF'
-CC = gcc
+      <p>Make sure you are still in <code>~/osforge-bootlab/uefi</code>. Run this entire command block in the Ubuntu terminal:</p>
+      <pre><code>cd ~/osforge-bootlab/uefi
+
+python3 - &lt;&lt;'PY'
+from pathlib import Path
+
+content = """CC = gcc
 LD = ld
 OBJCOPY = objcopy
 
@@ -200,51 +181,45 @@ EFI_CRT = $(shell dpkg -L gnu-efi | grep '/crt0-efi-x86_64.o$$' | head -n 1)
 EFI_LDS = $(shell dpkg -L gnu-efi | grep '/elf_x86_64_efi.lds$$' | head -n 1)
 EFI_LIBDIR = $(shell dirname "$$(dpkg -L gnu-efi | grep '/libefi.a$$' | head -n 1)")
 
-CFLAGS = -I$(EFI_INC) -I$(EFI_ARCH_INC) 
-         -fpic -ffreestanding -fno-stack-protector 
-         -fno-stack-check -fshort-wchar -mno-red-zone 
-         -maccumulate-outgoing-args
+CFLAGS = -I$(EFI_INC) -I$(EFI_ARCH_INC) -fpic -ffreestanding -fno-stack-protector -fno-stack-check -fshort-wchar -mno-red-zone -maccumulate-outgoing-args
 
 .PHONY: all clean check
 
 all: check BOOTX64.EFI
 
 check:
-	@test -f "$(EFI_CRT)" || (echo "ERROR: GNU-EFI startup object not found."; exit 1)
-	@test -f "$(EFI_LDS)" || (echo "ERROR: GNU-EFI linker script not found."; exit 1)
-	@test -f "$(EFI_LIBDIR)/libefi.a" || (echo "ERROR: libefi.a not found."; exit 1)
-	@test -f "$(EFI_LIBDIR)/libgnuefi.a" || (echo "ERROR: libgnuefi.a not found."; exit 1)
-	@test -f main.c || (echo "ERROR: main.c is missing."; exit 1)
+\t@test -f "$(EFI_CRT)" || (echo "ERROR: GNU-EFI startup object not found."; exit 1)
+\t@test -f "$(EFI_LDS)" || (echo "ERROR: GNU-EFI linker script not found."; exit 1)
+\t@test -f "$(EFI_LIBDIR)/libefi.a" || (echo "ERROR: libefi.a not found."; exit 1)
+\t@test -f "$(EFI_LIBDIR)/libgnuefi.a" || (echo "ERROR: libgnuefi.a not found."; exit 1)
+\t@test -f main.c || (echo "ERROR: main.c is missing."; exit 1)
 
 main.o: main.c
-	$(CC) $(CFLAGS) -c main.c -o main.o
+\t$(CC) $(CFLAGS) -c main.c -o main.o
 
 boot.so: main.o
-	$(LD) -nostdlib -znocombreloc 
-	    -T "$(EFI_LDS)" -shared -Bsymbolic 
-	    "$(EFI_CRT)" main.o 
-	    -L"$(EFI_LIBDIR)" -lefi -lgnuefi -o boot.so
+\t$(LD) -nostdlib -znocombreloc -T "$(EFI_LDS)" -shared -Bsymbolic "$(EFI_CRT)" main.o -L"$(EFI_LIBDIR)" -lefi -lgnuefi -o boot.so
 
 BOOTX64.EFI: boot.so
-	$(OBJCOPY) 
-	    -j .text -j .sdata -j .data -j .dynamic 
-	    -j .dynsym -j .rel -j .rela -j .reloc 
-	    --target=efi-app-x86_64 boot.so BOOTX64.EFI
+\t$(OBJCOPY) -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-x86_64 boot.so BOOTX64.EFI
 
 clean:
-	rm -f main.o boot.so BOOTX64.EFI
-EOF</code></pre>
+\trm -f main.o boot.so BOOTX64.EFI
+"""
 
-      <p><strong>Note:</strong> The recipe lines in a Makefile must begin with actual tab characters. The command above writes the tabs automatically. Do not type the word <code>EOF</code> into the Makefile itself; it marks the end of the input command.</p>
+Path("Makefile").write_text(content, encoding="utf-8")
+print("Makefile created with real TAB characters.")
+PY</code></pre>
+
+      <p>The Python command writes the Makefile into the current directory and inserts literal TAB characters for every command recipe. You do not need to type any TABs yourself.</p>
 
       <h3>Step 5 — Verify and build</h3>
-      <p>First, confirm that both source files exist in the current directory:</p>
+      <p>First verify that both files exist:</p>
       <pre><code>cd ~/osforge-bootlab/uefi
 ls -la</code></pre>
-      <p>You should see <code>main.c</code> and <code>Makefile</code>.</p>
-      <p>Ask Make to preview the build commands:</p>
+      <p>You should see <code>main.c</code> and <code>Makefile</code>. Check that Make can read the build rules:</p>
       <pre><code>make -n</code></pre>
-      <p>Then build the application:</p>
+      <p>Then build:</p>
       <pre><code>make clean
 make</code></pre>
       <p>If successful, verify the output:</p>
@@ -252,52 +227,48 @@ make</code></pre>
 file BOOTX64.EFI</code></pre>
 
       <div class="lab-note">
-        <strong>Expected result:</strong> a file named <code>BOOTX64.EFI</code>. If Step 5 fails, use the troubleshooting guide below before proceeding.
+        <strong>Expected result:</strong> a file named <code>BOOTX64.EFI</code>. If the build reports a missing GNU-EFI file or another linker error, use the troubleshooting section below.
       </div>
 
       <h3>Step 6 — Create a FAT disk image</h3>
-      <p>Run these commands from the same UEFI project directory:</p>
+      <p>Run these commands from the UEFI project directory after the build succeeds:</p>
       <pre><code>mkdir -p esp/EFI/BOOT
 cp BOOTX64.EFI esp/EFI/BOOT/BOOTX64.EFI
 
 dd if=/dev/zero of=uefi.img bs=1M count=64
 mkfs.fat -F 32 uefi.img
 mcopy -i uefi.img -s esp/EFI ::/</code></pre>
-      <p>This creates a 64 MB FAT image containing the UEFI application at the standard x86-64 removable-media path.</p>
 
       <h3>Step 7 — Find UEFI firmware for QEMU</h3>
-      <p>Find the OVMF firmware files installed by your Linux distribution:</p>
       <pre><code>find /usr/share/OVMF /usr/share/ovmf \
   -type f 2&gt;/dev/null</code></pre>
-      <p>Locate the x86-64 firmware code image, commonly named <code>OVMF_CODE.fd</code>. Some installations also provide a variable-store template, commonly named <code>OVMF_VARS.fd</code>.</p>
-      <p>If a variable-store template is available, copy it into your project directory:</p>
+      <p>Look for the x86-64 firmware code image, often called <code>OVMF_CODE.fd</code>. Some installations also provide a variable-store template called <code>OVMF_VARS.fd</code>. If present, copy the variable template to your project directory using its actual path:</p>
       <pre><code>cp /PATH/TO/OVMF_VARS.fd ./OVMF_VARS.fd</code></pre>
-      <p>Replace the example path with the real path on your machine. Start QEMU with the real firmware paths:</p>
+      <p>Replace the example path with the path found on your system. Start QEMU with the real firmware paths:</p>
       <pre><code>qemu-system-x86_64 
   -machine q35 
   -m 512 
   -drive if=pflash,format=raw,readonly=on,file=/PATH/TO/OVMF_CODE.fd 
   -drive if=pflash,format=raw,file=OVMF_VARS.fd 
   -drive format=raw,file=uefi.img</code></pre>
-      <p>Replace <code>/PATH/TO/OVMF_CODE.fd</code> with the actual firmware code path. If your distribution packages OVMF differently, consult its package documentation. Graphical QEMU may require a Linux desktop or a supported display configuration when using WSL.</p>
+      <p>Replace <code>/PATH/TO/OVMF_CODE.fd</code> with the actual firmware path. If your distribution packages OVMF differently, follow its package documentation. WSL may require a supported graphical display setup to show the QEMU window.</p>
 
-      <h3>Step 8 — Next steps</h3>
-      <p>Once your application runs, develop the actual loader in stages:</p>
+      <h3>Step 8 — Build toward a real kernel loader</h3>
       <ol>
         <li>Locate and validate a kernel image.</li>
         <li>Load the kernel into suitable memory.</li>
-        <li>Collect memory-map information and define a kernel handoff structure.</li>
+        <li>Collect memory-map information and define a documented kernel handoff structure.</li>
         <li>Call <code>ExitBootServices</code> correctly before taking over memory management.</li>
-        <li>Transfer control to the kernel's entry point using a documented calling convention.</li>
+        <li>Transfer control to the kernel entry point using the agreed calling convention.</li>
       </ol>
-      <p>These steps require a defined kernel format and careful memory management. The initial message-printing application is not yet a full OS bootloader.</p>
+      <p>The current example only prints a message. It does not yet load a separate OS kernel.</p>
     </section>
 
     <section class="lab-section" id="bios">
       <h2>3. Legacy BIOS bootloader tutorial</h2>
-      <p>The traditional BIOS boot process differs from UEFI. For this lab, NASM creates a 512-byte boot sector that prints a message using BIOS video services.</p>
+      <p>This lab creates a 512-byte BIOS boot sector using NASM. It prints a message using BIOS video services and then halts.</p>
 
-      <h3>Step 1 — Create the BIOS project directory</h3>
+      <h3>Step 1 — Create the BIOS project</h3>
       <pre><code>mkdir -p ~/osforge-bootlab/bios
 cd ~/osforge-bootlab/bios</code></pre>
 
@@ -338,73 +309,70 @@ times 510 - ($ - $$) db 0
 dw 0xAA55
 EOF</code></pre>
 
-      <h3>Step 3 — Assemble it</h3>
+      <h3>Step 3 — Assemble the boot sector</h3>
       <pre><code>nasm -f bin boot.asm -o boot.bin
 wc -c boot.bin</code></pre>
       <p>The expected size is exactly <code>512</code> bytes.</p>
 
-      <h3>Step 4 — Boot in QEMU</h3>
+      <h3>Step 4 — Test in QEMU</h3>
       <pre><code>qemu-system-i386 \
   -drive file=boot.bin,format=raw,if=floppy</code></pre>
-      <p>The virtual machine should display the OSForge BIOS message and then halt. This is a bootable demonstration sector, not a complete kernel loader. A full BIOS loader needs additional code to read more sectors and prepare the kernel's execution environment.</p>
+      <p>The virtual machine should display the message and halt. This is a bootable demonstration sector, not a full kernel loader. A full BIOS loader must read additional sectors and prepare the CPU environment required by the kernel.</p>
 
       <div class="lab-note">
-        <strong>QEMU or VirtualBox?</strong> QEMU is convenient for rapid bootloader testing. VirtualBox can also be used, but the virtual machine's firmware mode must match the lab: enable EFI for UEFI testing and disable EFI for legacy BIOS testing where supported.
+        <strong>QEMU or VirtualBox?</strong> QEMU is convenient for rapid testing. VirtualBox can also be used, but select firmware that matches the lab: enable EFI for UEFI testing and disable EFI for legacy BIOS testing where supported.
       </div>
     </section>
 
     <section class="lab-section" id="troubleshooting">
       <h2>4. Troubleshooting</h2>
 
-      <h3>Error: <code>No rule to make target 'clean'</code></h3>
-      <p>Make found a Makefile, but it did not contain the requested <code>clean</code> rule. You may be using the wrong file or an incomplete Makefile. Return to the UEFI project directory and inspect the files:</p>
+      <h3><code>No targets specified and no makefile found</code></h3>
+      <p>Make cannot find a Makefile in the current directory. Return to the UEFI project directory and inspect its contents:</p>
       <pre><code>cd ~/osforge-bootlab/uefi
 pwd
-ls -la
-cat Makefile</code></pre>
-      <p>If the Makefile is missing or its contents are incorrect, repeat UEFI Step 4.</p>
-
-      <h3>Error: <code>No targets specified and no makefile found</code></h3>
-      <p>This usually means you ran <code>make</code> from the wrong directory or did not create the Makefile. Run:</p>
-      <pre><code>cd ~/osforge-bootlab/uefi
-ls -la
-make</code></pre>
-      <p>Check that <code>Makefile</code> is listed. If the file was accidentally saved as <code>Makefile.txt</code>, rename it:</p>
+ls -la</code></pre>
+      <p>If <code>Makefile</code> is missing, repeat Step 4. If it is named <code>Makefile.txt</code>, rename it:</p>
       <pre><code>mv Makefile.txt Makefile</code></pre>
 
-      <h3>Error: <code>No rule to make target 'main.c'</code></h3>
-      <p>The Makefile cannot find the C source file in the project directory. Repeat UEFI Step 2 and confirm the file exists with <code>ls -l main.c</code>.</p>
+      <h3><code>No rule to make target 'clean'</code></h3>
+      <p>Make found a file but it may not contain the correct rules. Recreate the Makefile using the Python command in Step 4, then run:</p>
+      <pre><code>make clean
+make</code></pre>
 
-      <h3>Error: <code>missing separator</code></h3>
-      <p>Makefile command lines must begin with a literal tab. Repeat UEFI Step 4 using the terminal command, which preserves the required tabs.</p>
+      <h3><code>missing separator (did you mean TAB instead of spaces?)</code></h3>
+      <p>This means a Makefile recipe line starts with spaces instead of a literal TAB. Do not try to repair the indentation by hand. Repeat Step 4's Python command, which writes the tabs automatically.</p>
 
-      <h3>GNU-EFI libraries or linker script not found</h3>
-      <p>Inspect the installed paths:</p>
+      <h3><code>No rule to make target 'main.c'</code></h3>
+      <p>The C source file is missing from the project directory. Recreate it using Step 2, then verify it:</p>
+      <pre><code>ls -l main.c</code></pre>
+
+      <h3>GNU-EFI startup object, linker script, or library not found</h3>
       <pre><code>dpkg -L gnu-efi | grep -E \
 'crt0-efi-x86_64.o|elf_x86_64_efi.lds|libefi.a|libgnuefi.a'</code></pre>
-      <p>If the Makefile's checks fail, the package paths or installed files differ from the expected layout. Use the displayed paths to adjust the Makefile for your distribution.</p>
+      <p>If the Makefile's checks fail, the files may be installed in different locations or the package may be incomplete. Use the reported paths to adapt the Makefile for your distribution.</p>
 
-      <h3>Compiler or assembler command not found</h3>
+      <h3><code>gcc</code>, <code>ld</code>, or <code>nasm</code> not found</h3>
       <pre><code>sudo apt update
-sudo apt install build-essential binutils nasm make gnu-efi</code></pre>
+sudo apt install build-essential binutils nasm make gnu-efi python3</code></pre>
 
-      <h3>EFI target is not supported by objcopy</h3>
-      <p>Check the available targets:</p>
+      <h3><code>objcopy</code> does not support the EFI target</h3>
       <pre><code>objcopy --info | grep -i efi</code></pre>
-      <p>If the expected target is unavailable, your binutils package or EFI conversion process needs to be adjusted.</p>
+      <p>If the EFI target is unavailable, the conversion step or binutils installation needs adjustment.</p>
 
-      <h3>QEMU cannot find firmware</h3>
+      <h3>QEMU cannot find the firmware</h3>
       <pre><code>ls -l uefi.img
 find /usr/share/OVMF /usr/share/ovmf -type f 2&gt;/dev/null</code></pre>
-      <p>Use the actual firmware paths reported by your system rather than the example paths in Step 7.</p>
+      <p>Use actual firmware paths from your system rather than the example paths above.</p>
     </section>
 
     <section class="lab-section" id="checklist">
       <h2>5. Completion checklist</h2>
       <ul class="lab-checklist">
-        <li>Ubuntu, Debian, or WSL has the required build tools.</li>
-        <li><code>main.c</code> and <code>Makefile</code> are in the UEFI project directory.</li>
-        <li><code>make</code> creates <code>BOOTX64.EFI</code>.</li>
+        <li>Ubuntu, Debian, or WSL has the required tools installed.</li>
+        <li><code>main.c</code> and <code>Makefile</code> exist in the UEFI directory.</li>
+        <li>The Makefile was generated with real TAB characters.</li>
+        <li><code>make</code> produces <code>BOOTX64.EFI</code>.</li>
         <li>The FAT image contains <code>EFI/BOOT/BOOTX64.EFI</code>.</li>
         <li>The UEFI application is tested with QEMU and OVMF.</li>
         <li>The BIOS example assembles to exactly 512 bytes.</li>
