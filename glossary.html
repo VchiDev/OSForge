@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OSDev Glossary — OSForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">◈ OSForge</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start.html">Tutorial</a>
+    <a href="planner.html">OS Planner</a>
+    <a href="linux-kernel.html">Linux Kernel</a>
+    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="demos.html">Demo OSes</a>
+  </nav>
+</header>
+
+<main class="container">
+  <span class="eyebrow">REFERENCE LIBRARY</span>
+  <h1>Operating system glossary</h1>
+  <p>Learn the terminology you'll encounter while building an OS.</p>
+
+  <div class="grid">
+    <article class="card">
+      <h3>Kernel</h3>
+      <p>The privileged core responsible for managing memory, CPU execution,
+      hardware access, and system calls.</p>
+    </article>
+
+    <article class="card">
+      <h3>Bootloader</h3>
+      <p>Software that prepares the machine and loads or starts the kernel.</p>
+    </article>
+
+    <article class="card">
+      <h3>UEFI</h3>
+      <p>A modern firmware interface that can launch EFI applications and
+      provide boot-time services.</p>
+    </article>
+
+    <article class="card">
+      <h3>EFI application</h3>
+      <p>A firmware-compatible executable, usually in PE/COFF format, that
+      UEFI can load.</p>
+    </article>
+
+    <article class="card">
+      <h3>Cross-compiler</h3>
+      <p>A compiler that runs on one system while generating code for a
+      different target architecture or platform.</p>
+    </article>
+
+    <article class="card">
+      <h3>Linker script</h3>
+      <p>A file describing how code and data sections are arranged in the
+      linked output.</p>
+    </article>
+
+    <article class="card">
+      <h3>Interrupt</h3>
+      <p>An event that redirects execution to a handler, often to respond
+      to hardware or processor events.</p>
+    </article>
+
+    <article class="card">
+      <h3>Virtual memory</h3>
+      <p>A mechanism that maps virtual addresses to physical memory and can
+      isolate the address spaces of different processes.</p>
+    </article>
+
+    <article class="card">
+      <h3>Root filesystem</h3>
+      <p>The initial filesystem containing the programs, libraries, and
+      configuration needed by a Linux system.</p>
+    </article>
+
+    <article class="card">
+      <h3>Init system</h3>
+      <p>The first user-space process, which initializes services and
+      coordinates system startup.</p>
+    </article>
+
+    <article class="card">
+      <h3>QEMU</h3>
+      <p>A machine emulator and virtualizer commonly used to test kernels
+      without booting them on the host computer.</p>
+    </article>
+
+    <article class="card">
+      <h3>ELF</h3>
+      <p>A common executable and object-file format used by many Unix-like
+      systems. UEFI applications normally use PE/COFF instead.</p>
+    </article>
+
+    <article class="card">
+      <h3>System call</h3>
+      <p>A controlled interface through which a user-space program requests
+      a service from the kernel.</p>
+    </article>
+
+    <article class="card">
+      <h3>Scheduler</h3>
+      <p>The kernel component that determines which runnable task gets CPU time.</p>
+    </article>
+
+    <article class="card">
+      <h3>Driver</h3>
+      <p>Software that allows the operating system to interact with a
+      particular hardware device or interface.</p>
+    </article>
+  </div>
+
+  <div class="callout">
+    <strong>Development tip:</strong> Record your toolchain version, target
+    architecture, source revision, configuration, and build command. This
+    makes it easier to reproduce a working build and diagnose regressions.
+  </div>
+
+  <a class="button" href="start.html">Return to the tutorial →</a>
+</main>
+
+<footer>OSForge — Learn the concepts behind your operating system.</footer>
+</body>
+</html>
