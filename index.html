@@ -1,87 +1,422 @@
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OSForge — Build Your Own Operating System</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OSForge — Build your operating system</title>
+<style>
+:root{--bg:#050d1b;--panel:#0a1930;--panel2:#0b203c;--line:#17385c;--text:#e8f2ff;--muted:#9ab4d6;--blue:#2875ff;--cyan:#36c8ff;--green:#5be3a1;--amber:#ffd27a}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 75% 0%,#102d55 0,transparent 36%),var(--bg);color:var(--text);font:14px/1.5 Inter,"Segoe UI",Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;color:var(--text);border:1px solid #2463aa;border-radius:8px;padding:9px 14px;background:linear-gradient(135deg,#1759d8,#267bff)}
+button:hover{filter:brightness(1.15)}
+button.secondary{background:#0b1b32;border-color:#2b4d76}
+header{min-height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:10px 24px;background:#061225dd;position:sticky;top:0;z-index:2;backdrop-filter:blur(14px)}
+.brand{font-size:23px;font-weight:800;letter-spacing:-.6px;white-space:nowrap}.brand span{color:var(--cyan)}
+nav{display:flex;gap:5px;flex:1}nav button{background:transparent;border:0;color:#bdd2ed;padding:10px 12px}nav button.active,nav button:hover{color:#fff;background:#102b4a}
+.search{width:min(230px,20vw);background:#091a30;border:1px solid #24496f;border-radius:8px;padding:10px;color:white}
+.hero{min-height:230px;padding:34px clamp(22px,4vw,60px);display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);background:linear-gradient(100deg,#061225 20%,#071a32 70%,#09284b)}
+.hero h1{font-size:clamp(29px,3.3vw,46px);line-height:1.12;margin:0 0 12px;letter-spacing:-1.5px}.gradient{background:linear-gradient(90deg,#fff,#49baff);background-clip:text;color:transparent}
+.hero p{color:#bdd0e8;font-size:16px;max-width:650px;margin:0 0 18px}.checks{display:flex;flex-wrap:wrap;gap:16px;color:#d1e4ff;margin:16px 0 22px}.checks span:before{content:"✓";color:var(--cyan);font-weight:800;margin-right:8px}
+.hero-art{font-size:100px;filter:drop-shadow(0 0 22px #128cff80);padding:0 4vw}
+.features{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:16px clamp(18px,2.6vw,40px)}
+.feature,.panel,.sidebar,.template{background:linear-gradient(145deg,#0b1c32,#071528);border:1px solid var(--line);border-radius:9px}
+.feature{padding:15px;display:flex;gap:12px;min-height:86px}.feature .ico{font-size:24px;color:var(--cyan)}.feature b{display:block;margin-bottom:3px}.feature small{color:var(--muted)}
+.layout{display:grid;grid-template-columns:210px minmax(300px,1fr) minmax(280px,32%);gap:14px;padding:0 clamp(18px,2.6vw,40px) 28px}
+.sidebar{padding:12px;height:max-content}.sidebrand{font-size:17px;font-weight:700;padding:4px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.sidebtn{width:100%;display:flex;gap:10px;text-align:left;background:transparent;border:0;color:#bdd2ed;padding:10px;border-radius:7px}.sidebtn.active,.sidebtn:hover{background:#10346a;color:#fff}
+.quick{border-top:1px solid var(--line);margin-top:12px;padding:12px 5px;color:var(--muted);font-size:12px}.quick div{margin:8px 0}
+.maincol,.rightcol{display:flex;flex-direction:column;gap:12px;min-width:0}.panel{padding:15px}.panel h2{font-size:16px;margin:0 0 3px}.sub{color:var(--muted);margin:0 0 12px}
+.tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);margin:10px 0 13px}.tabs button{background:transparent;border:0;border-radius:0;padding:8px 2px;color:var(--muted)}.tabs button.active{border-bottom:2px solid var(--cyan);color:var(--cyan)}
+.templates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.template{padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}.template .bigico{font-size:26px}.template p{color:var(--muted);font-size:12px;margin:0;flex:1}.template button{padding:7px 6px;font-size:12px}.template.selected{border-color:var(--cyan);box-shadow:0 0 0 1px #36c8ff35}
+.projectrow{display:grid;grid-template-columns:1.4fr .7fr 1fr auto;gap:8px;align-items:center;padding:10px 7px;border-top:1px solid #142d49;font-size:12px}.projectrow.head{color:var(--muted)}.projectname{display:flex;align-items:center;gap:9px}.folder{font-size:20px}
+.tiny{padding:5px 10px;font-size:12px}.codehead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.code{width:100%;min-height:190px;resize:vertical;background:#030b16;color:#b6f3d5;border:1px solid #1b3859;border-radius:6px;padding:12px;font:12px/1.7 Consolas,monospace;tab-size:2}
+.terminal{background:#020a13;border:1px solid #1a3551;border-radius:6px;padding:12px;color:#d7e9ff;font:12px/1.7 Consolas,monospace;min-height:120px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ok{color:var(--green)}.muted{color:var(--muted)}.notice{color:var(--muted);font-size:12px;margin-top:9px}.hidden{display:none!important}
+.formrow{display:flex;gap:8px;margin:10px 0}.formrow input,.formrow select,.field{min-width:0;flex:1;background:#041123;border:1px solid #24496f;border-radius:7px;padding:10px;color:white;width:100%}
+.field-label{display:block;margin:12px 0 5px;font-weight:600}.status{font-size:12px;border:1px solid #315477;border-radius:20px;padding:4px 9px;display:inline-block}
+.status.tested{color:var(--green);border-color:#246b54}.status.pending{color:var(--amber);border-color:#806334}
+.env-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.env-info{background:#061326;border:1px solid #1b3859;border-radius:8px;padding:12px;margin-top:12px}.env-info h3{font-size:14px;margin:0 0 5px}.env-info p{margin:5px 0;color:#c3d5eb}.env-info ul{padding-left:20px;margin:8px 0}.env-info li{margin:4px 0}.tag{font-size:11px;color:var(--muted)}
+.help{display:flex;gap:12px;align-items:flex-start}.help .bigico{font-size:25px}
+footer{border-top:1px solid var(--line);padding:20px 30px;color:var(--muted);font-size:12px}
+@media(max-width:1100px){.features{grid-template-columns:repeat(3,1fr)}.layout{grid-template-columns:190px minmax(0,1fr)}.rightcol{grid-column:2}.hero-art{font-size:75px}}
+@media(max-width:720px){header{gap:10px;padding:10px 12px;flex-wrap:wrap}.brand{font-size:20px}nav{display:none}.search{flex:1;width:auto}.hero-art{display:none}.features{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr;padding:0 12px 20px}.sidebar{display:none}.rightcol{grid-column:auto}.projectrow{grid-template-columns:1fr auto}.projectrow>*:nth-child(2),.projectrow>*:nth-child(3){display:none}.feature{padding:10px}.features{padding:12px}.env-grid{grid-template-columns:1fr}.formrow{flex-wrap:wrap}}
+</style>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="index.html">◈ OSForge</a>
+<header>
+  <div class="brand">◈ OS<span>Forge</span></div>
   <nav>
-    <a href="index.html">Home</a>
-    <a href="start.html">Tutorial</a>
-    <a href="planner.html">OS Planner</a>
-    <a href="linux-kernel.html">Linux Kernel</a>
-    <a href="efi-bootloader.html">EFI Bootloaders</a>
-    <a href="demos.html">Demo OSes</a>
+    <button class="active" data-page="dashboard">Home</button>
+    <button data-page="create">Create</button>
+    <button data-page="templates">Templates</button>
+    <button data-page="docs">Documentation</button>
+    <button data-page="community">Community</button>
   </nav>
+  <input id="search" class="search" placeholder="Search projects, kernels…">
+  <button class="secondary" id="signin">Sign in</button>
+  <button id="getStarted">Get Started</button>
 </header>
 
-<main class="container">
-  <section class="hero">
-    <span class="eyebrow">YOUR OS. YOUR RULES.</span>
-    <h1>Build an operating system<br><span>from the ground up.</span></h1>
-    <p>OSForge is a practical OS development guide. Choose your goals and learn
-    exactly which tools, files, commands, and testing steps you need.</p>
-    <div class="actions">
-      <a class="button" href="planner.html">Plan My OS →</a>
-      <a class="button secondary" href="start.html">Start Learning</a>
-    </div>
-    <div class="terminal">
-      <div>OSFORGE DEVELOPMENT CONSOLE</div>
-      <p>&gt; choose_target --architecture x86_64</p>
-      <p>&gt; select_kernel --type custom</p>
-      <p>&gt; build --environment virtual-machine</p>
-      <p class="success">Ready to start your OS project.</p>
-    </div>
-  </section>
+<section class="hero">
+  <div>
+    <h1>Build Your Own <span class="gradient">Operating System</span></h1>
+    <p>Create custom operating systems and Linux-based kernels with practical project tools, starter templates, and a focused development workspace.</p>
+    <div class="checks"><span>OS Builder</span><span>Linux Kernel Support</span><span>Source Editor</span><span>Build &amp; Test</span></div>
+    <button id="startCreating">Start Creating →</button>
+    <button class="secondary" id="browseTemplates">Browse Templates</button>
+  </div>
+  <div class="hero-art" aria-label="Penguin illustration">🐧<div style="font-size:12px;text-align:center;color:#65caff;letter-spacing:2px">BUILD · COMPILE · BOOT</div></div>
+</section>
 
-  <section>
-    <h2>Choose your development path</h2>
-    <div class="grid">
-      <article class="card">
-        <h3>🧭 OS Development Tutorial</h3>
-        <p>Learn the entire process from an empty project folder to a booting kernel.</p>
-        <a href="start.html">Open tutorial →</a>
-      </article>
-      <article class="card">
-        <h3>🐧 Linux Kernel Studio</h3>
-        <p>Configure, compile, and test a Linux kernel for your own OS or distribution.</p>
-        <a href="linux-kernel.html">Learn Linux kernel development →</a>
-      </article>
-      <article class="card">
-        <h3>⚙️ EFI Bootloader Lab</h3>
-        <p>Learn to create your own UEFI applications and custom .efi bootloaders.</p>
-        <a href="efi-bootloader.html">Explore EFI development →</a>
-      </article>
-      <article class="card">
-        <h3>🧪 Demo OS Gallery</h3>
-        <p>Explore example operating system projects and follow their learning paths.</p>
-        <a href="demos.html">Explore demos →</a>
-      </article>
-      <article class="card">
-        <h3>🎯 OS Requirements Planner</h3>
-        <p>Choose your goals and get a recommended development roadmap.</p>
-        <a href="planner.html">Build my roadmap →</a>
-      </article>
-      <article class="card">
-        <h3>📚 OSDev Reference</h3>
-        <p>Understand bootloaders, linkers, memory management, kernels, and more.</p>
-        <a href="glossary.html">Open reference →</a>
-      </article>
-    </div>
-  </section>
+<section class="features">
+  <div class="feature"><div class="ico">⌘</div><div><b>OS Builder</b><small>Plan an OS or begin from scratch.</small></div></div>
+  <div class="feature"><div class="ico">⚙</div><div><b>Linux Kernel Support</b><small>Configure a Linux source build.</small></div></div>
+  <div class="feature"><div class="ico">〈〉</div><div><b>Source Editor</b><small>Edit starter files.</small></div></div>
+  <div class="feature"><div class="ico">⬡</div><div><b>Build &amp; Test</b><small>Track build steps and boot images.</small></div></div>
+  <div class="feature"><div class="ico">♧</div><div><b>Learn &amp; Share</b><small>Guides for your next milestone.</small></div></div>
+</section>
 
-  <section class="callout">
-    <h2>Learn by building</h2>
-    <p>OSForge is designed to explain what to do, why it matters, how to do it,
-    and how to check whether it worked. Builds and emulator tests are performed
-    using development tools on your own computer.</p>
-  </section>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebrand">◈ OSForge</div>
+  <button class="sidebtn active" data-page="dashboard">⌂ Dashboard</button>
+  <button class="sidebtn" data-page="projects">▣ My Projects</button>
+  <button class="sidebtn" data-page="templates">▦ Templates</button>
+  <button class="sidebtn" data-page="kernel">⚙ Kernel Builder</button>
+  <button class="sidebtn" data-page="environment">▤ Development Environment</button>
+  <button class="sidebtn" data-page="docs">▤ Documentation</button>
+  <button class="sidebtn" data-page="community">♧ Community</button>
+  <div class="quick"><b>QUICK START</b><div>① Create a project</div><div>② Choose a template</div><div>③ Edit source files</div><div>④ Build and test locally</div></div>
+  <div class="panel" style="padding:10px;margin-top:10px"><b>Build locally</b><p class="notice">This website prototype does not install compilers or execute OS builds.</p></div>
+</aside>
+
+<main class="maincol">
+<section class="panel" id="createPanel">
+  <h2 id="panelTitle">Create a New OS Project</h2>
+  <p class="sub" id="panelSub">Choose a template to get started or create a blank project.</p>
+  <div class="tabs">
+    <button class="active" data-tab="templates">Templates</button>
+    <button data-tab="custom">Custom</button>
+  </div>
+  <div id="templateGrid" class="templates">
+    <div class="template" data-template="Minimal Linux OS"><div class="bigico">🐧</div><b>Minimal Linux OS</b><p>A small Linux-based environment with a minimal userspace.</p><button class="secondary use-template">Use Template</button></div>
+    <div class="template" data-template="Desktop OS"><div class="bigico">▣</div><b>Desktop OS</b><p>Plan a graphical desktop around a Linux kernel.</p><button class="secondary use-template">Use Template</button></div>
+    <div class="template" data-template="Educational OS"><div class="bigico">🎓</div><b>Educational OS</b><p>Learn bootloaders, memory, interrupts, and drivers.</p><button class="secondary use-template">Use Template</button></div>
+    <div class="template" data-template="Custom Kernel"><div class="bigico">⚙</div><b>Custom Kernel</b><p>Start with a blank kernel project configuration.</p><button class="secondary use-template">Use Template</button></div>
+  </div>
+  <div id="customForm" class="hidden">
+    <label for="projectName">Project name</label>
+    <div class="formrow"><input id="projectName" placeholder="e.g. My Operating System"><select id="projectType"><option>Custom OS</option><option>Linux Kernel</option><option>Bootloader</option><option>Learning Project</option></select></div>
+    <label for="projectLang">Primary language</label>
+    <div class="formrow"><select id="projectLang"><option>C + Assembly</option><option>Rust</option><option>C</option><option>Assembly</option><option>Linux kernel (C)</option></select><button id="createProject">Create Project</button></div>
+    <p class="notice">Project names are stored only for this browser session in this prototype. No code is compiled or uploaded.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="codehead"><div><h2>My Projects</h2><p class="sub">Local demo projects</p></div><button class="secondary tiny" id="newProject">+ New Project</button></div>
+  <div class="projectrow head"><span>Name</span><span>Type</span><span>Last Modified</span><span>Action</span></div>
+  <div id="projectList"></div>
+</section>
+
+<section class="panel">
+  <div class="codehead"><h2>Starter Source Editor</h2><button class="secondary tiny" id="copyCode">Copy Code</button></div>
+  <p class="sub">Editable example · <span id="fileLabel">kernel.c</span></p>
+  <textarea id="editor" class="code" spellcheck="false">/* OSForge starter example — not a complete kernel */
+#include <stdint.h>
+
+void kernel_main(void) {
+    /* Initialize serial output, memory, and interrupts here. */
+    for (;;) {
+        __asm__ volatile ("hlt");
+    }
+}</textarea>
+  <div class="notice">Save this source into your local project and build it with the toolchain appropriate for your target.</div>
+</section>
+
+<section class="panel" id="environmentPanel">
+  <div class="codehead"><div><h2>Development Environment</h2><p class="sub">Choose your actual development environment for tailored guidance.</p></div><span id="compatStatus" class="status tested">Known test environment</span></div>
+  <div class="env-grid">
+    <div>
+      <label class="field-label" for="platform">Where are you building?</label>
+      <select id="platform" class="field">
+        <option value="wsl">Ubuntu on WSL</option>
+        <option value="linux">Native Linux</option>
+        <option value="windows">Native Windows</option>
+        <option value="macos">macOS</option>
+      </select>
+    </div>
+    <div>
+      <label class="field-label" for="tutorial">What are you building?</label>
+      <select id="tutorial" class="field">
+        <option value="uefi">UEFI bootloader</option>
+        <option value="bios">Legacy BIOS bootloader</option>
+        <option value="kernel">Custom kernel</option>
+        <option value="linux-kernel">Linux kernel</option>
+      </select>
+    </div>
+  </div>
+  <div class="env-info" aria-live="polite">
+    <h3 id="envTitle">Ubuntu on WSL · UEFI bootloader</h3>
+    <p id="envStatusText">This is the reference environment currently being tested for OSForge's UEFI tutorial. Other configurations have not been verified by this project yet.</p>
+    <div id="envInstructions"></div>
+  </div>
+  <p class="notice">Compatibility labels describe OSForge's testing status, not a guarantee that every tool is installed. Choosing an environment does not install software or run a build.</p>
+</section>
 </main>
 
-<footer>OSForge — Operating system development, made approachable.</footer>
+<aside class="rightcol">
+  <section class="panel">
+    <div class="codehead"><h2>Build Output</h2><button class="secondary tiny" id="clearLog">Clear</button></div>
+    <p class="sub">Simulated terminal</p>
+    <div class="terminal" id="terminal">$ osforge status
+OSForge workspace ready.
+No build has been run.
+Tip: choose a project and review its build instructions.</div>
+    <div class="formrow"><button id="buildButton">▶ Simulate Build</button><button class="secondary" id="bootButton">Boot Checklist</button></div>
+    <p class="notice">Simulation only. Real compilation requires local tools such as a compiler, linker, Make, and an emulator.</p>
+  </section>
+  <section class="panel">
+    <div class="help"><div class="bigico">📘</div><div><h2>Need Help?</h2><p class="sub">Learn about bootloaders, kernel entry points, Linux configuration, and emulator testing.</p><button class="secondary tiny" id="docsButton">Open Quick Guide →</button></div></div>
+  </section>
+  <section class="panel">
+    <h2>Build target</h2><p class="sub">Choose the target architecture.</p>
+    <select id="target" class="field"><option>x86_64 — QEMU / PC</option><option>i686 — Legacy PC</option><option>AArch64 — ARM64</option><option>RISC-V 64</option></select>
+    <p class="notice">Target selection is a project note in this prototype; it does not configure a real compiler.</p>
+  </section>
+</aside>
+</div>
+
+<footer>OSForge · An operating-system development learning workspace. <span style="float:right">Prototype · Browser-session projects</span></footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+let projects = [
+  {name:"Sample Educational OS",type:"Learning Project",detail:"Starter project"},
+  {name:"LinuxKernel-Dev",type:"Linux Kernel",detail:"Starter project"}
+];
+
+function log(text){ $("#terminal").textContent = text; }
+
+function addProject(name,type,detail="Starter project"){
+  if(!name.trim()) return;
+  projects.unshift({name:name.trim(),type,detail});
+  renderProjects();
+  $("#projectName").value="";
+  log('$ project create "'+name.trim()+'"\nProject added to this browser session.\nNo files have been compiled.');
+}
+
+function renderProjects(){
+  const list=$("#projectList");
+  list.innerHTML="";
+  projects.forEach(p=>{
+    const row=document.createElement("div");
+    row.className="projectrow";
+    const name=document.createElement("span");
+    name.className="projectname";
+    const folder=document.createElement("span");
+    folder.className="folder";
+    folder.textContent="📁";
+    const details=document.createElement("span");
+    const title=document.createElement("b");
+    title.textContent=p.name;
+    const sub=document.createElement("br");
+    const small=document.createElement("span");
+    small.className="muted";
+    small.textContent=p.detail;
+    details.append(title,sub,small);
+    name.append(folder,details);
+    const type=document.createElement("span");
+    type.textContent=p.type;
+    const date=document.createElement("span");
+    date.textContent="Local session";
+    const button=document.createElement("button");
+    button.className="tiny secondary";
+    button.textContent="Open";
+    button.addEventListener("click",()=>openProject(p.name));
+    row.append(name,type,date,button);
+    list.append(row);
+  });
+}
+
+function openProject(name){
+  $("#panelTitle").textContent=name;
+  $("#panelSub").textContent="Workspace selected · edit the starter source below.";
+  $("#fileLabel").textContent=name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+".c";
+  log('$ osforge open "'+name+'"\nWorkspace selected.\nEdit source and use your local compiler for a real build.');
+}
+
+function page(name){
+  $$("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+  const titles={
+    dashboard:["Create a New OS Project","Choose a template or create a blank project."],
+    create:["Create a New OS Project","Configure a new operating-system project."],
+    templates:["Project Templates","Choose a starting point for your OS project."],
+    projects:["My Projects","Your locally tracked demo projects."],
+    kernel:["Kernel Builder","Configure a kernel project and review the starter code."],
+    environment:["Development Environment","Choose your platform and view environment-specific setup guidance."],
+    docs:["Documentation","A quick orientation to the OS development workflow."],
+    community:["Community","Share ideas, compare designs, and learn OS development."]
+  };
+  const t=titles[name]||titles.dashboard;
+  $("#panelTitle").textContent=t[0];
+  $("#panelSub").textContent=t[1];
+
+  if(name==="environment"){
+    $("#environmentPanel").scrollIntoView({behavior:"smooth",block:"start"});
+    updateEnvironment();
+  }
+  if(name==="docs") log("$ help\n1. Choose a template.\n2. Select your actual development environment.\n3. Check toolchain and target requirements.\n4. Build locally and test in an emulator.\n5. Never run an untrusted kernel on your main system.");
+  if(name==="kernel") log("$ kernel-builder\nSelect a target, set up a suitable toolchain, then follow the kernel build documentation.\nThis page does not execute compiler commands.");
+  if(name==="community") log("$ community\nCommunity features are a future placeholder in this prototype.");
+  if(name==="projects") $("#projectList").scrollIntoView({behavior:"smooth",block:"start"});
+  if(name==="templates") $("#templateGrid").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function updateEnvironment(){
+  const platform=$("#platform").value;
+  const tutorial=$("#tutorial").value;
+  const platformNames={
+    wsl:"Ubuntu on WSL",
+    linux:"Native Linux",
+    windows:"Native Windows",
+    macos:"macOS"
+  };
+  const tutorialNames={
+    uefi:"UEFI bootloader",
+    bios:"Legacy BIOS bootloader",
+    kernel:"Custom kernel",
+    "linux-kernel":"Linux kernel"
+  };
+  const tested=platform==="wsl";
+  $("#compatStatus").textContent=tested?"Known test environment":"Not yet verified";
+  $("#compatStatus").className="status "+(tested?"tested":"pending");
+  $("#envTitle").textContent=platformNames[platform]+" · "+tutorialNames[tutorial];
+
+  let summary="";
+  if(platform==="wsl"){
+    summary="Ubuntu on WSL is OSForge's current reference environment. The UEFI build has been compiled here, but the complete build-and-boot workflow still needs end-to-end verification.";
+  }else if(platform==="linux"){
+    summary="Native Linux may support similar GNU toolchains, but package names, firmware locations, permissions, and emulator setup vary by distribution. This environment has not been verified yet.";
+  }else if(platform==="windows"){
+    summary="Native Windows needs its own toolchain and emulator setup. Linux commands and Linux firmware paths will not work unchanged in PowerShell or Command Prompt. This environment has not been verified yet.";
+  }else{
+    summary="macOS needs a compatible compiler, linker, and emulator setup. Tool availability and CPU architecture may affect the instructions. This environment has not been verified yet.";
+  }
+  $("#envStatusText").textContent=summary;
+
+  const common={
+    uefi:{
+      wsl:"Check GCC, GNU-EFI, binutils, Make, QEMU, and OVMF. Confirm the EFI file is placed at esp/EFI/BOOT/BOOTX64.EFI. Use the actual firmware paths installed on your system.",
+      linux:"Check your distribution's packages for an x86_64 EFI toolchain, GNU-EFI headers/libraries, QEMU, and OVMF firmware. Firmware paths differ across distributions.",
+      windows:"Choose a deliberate build route: WSL, a configured GNU-EFI cross-toolchain, or another compatible EFI development environment. Do not run Linux Makefile commands directly in PowerShell without the required tools.",
+      macos:"Choose a compatible x86_64 EFI build toolchain and an emulator that can use appropriate UEFI firmware. Verify host and guest architecture compatibility before building."
+    },
+    bios:{
+      wsl:"Check NASM, a suitable compiler/linker if needed, and QEMU. A legacy BIOS boot sector must meet its boot format requirements, including the 512-byte sector and 0x55AA signature where applicable.",
+      linux:"Install or verify NASM and QEMU through your distribution. Confirm that the generated boot image matches the selected BIOS boot format.",
+      windows:"Use a configured NASM and QEMU installation or build inside WSL. Confirm the image format and boot-sector signature before testing.",
+      macos:"Use compatible NASM and emulator tools. Verify the image format and boot-sector requirements before testing."
+    },
+    kernel:{
+      wsl:"Select the target architecture first. Verify the matching compiler, linker, assembler, and boot protocol. A host compiler alone may not be a suitable cross-compiler.",
+      linux:"Install a toolchain appropriate for the target architecture and kernel design. Verify the linker script, entry point, and boot protocol.",
+      windows:"Choose a supported cross-compilation environment, such as a configured WSL toolchain, or install a compatible native toolchain. Build settings depend on the target.",
+      macos:"Choose a target-compatible cross-compiler and linker. Host architecture does not automatically determine the kernel's target architecture."
+    },
+    "linux-kernel":{
+      wsl:"For Linux kernel builds, verify the required build tools and the target architecture. Follow the official kernel documentation for configuration and compilation.",
+      linux:"Follow the official Linux kernel build documentation and install the development packages required by your distribution.",
+      windows:"A Linux environment such as WSL is usually the most straightforward route for the standard Linux kernel build workflow. Native Windows instructions are not verified here.",
+      macos:"A Linux VM or other supported Linux build environment may be the most practical route. This native macOS workflow is not verified here."
+    }
+  };
+
+  const text=common[tutorial][platform];
+  const heading=document.createElement("h3");
+  heading.textContent="Recommended checks";
+  const paragraph=document.createElement("p");
+  paragraph.textContent=text;
+  const list=document.createElement("ul");
+  [
+    "Confirm required tools are installed and available in the terminal.",
+    "Check that the generated file matches the intended target architecture and format.",
+    "Treat a successful compile as separate from a successful emulator boot."
+  ].forEach(item=>{
+    const li=document.createElement("li");
+    li.textContent=item;
+    list.append(li);
+  });
+  const box=$("#envInstructions");
+  box.replaceChildren(heading,paragraph,list);
+}
+
+$$("[data-page]").forEach(b=>b.addEventListener("click",()=>page(b.dataset.page)));
+
+$$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
+  const custom=b.dataset.tab==="custom";
+  $$("[data-tab]").forEach(t=>t.classList.toggle("active",t===b));
+  $("#templateGrid").classList.toggle("hidden",custom);
+  $("#customForm").classList.toggle("hidden",!custom);
+}));
+
+$$(".use-template").forEach(b=>b.addEventListener("click",()=>{
+  const card=b.closest(".template");
+  addProject(card.dataset.template,"OS Template",card.querySelector("p").textContent);
+  $$(".template").forEach(c=>c.classList.toggle("selected",c===card));
+}));
+
+$("#createProject").addEventListener("click",()=>{
+  addProject($("#projectName").value,$("#projectType").value,$("#projectLang").value);
+});
+$("#newProject").addEventListener("click",()=>{
+  $('[data-tab="custom"]').click();
+  $("#projectName").focus();
+});
+$("#startCreating").addEventListener("click",()=>{
+  $("#createPanel").scrollIntoView({behavior:"smooth"});
+  $("#projectName").focus();
+});
+$("#getStarted").addEventListener("click",()=>$("#startCreating").click());
+$("#browseTemplates").addEventListener("click",()=>page("templates"));
+$("#docsButton").addEventListener("click",()=>page("docs"));
+$("#signin").addEventListener("click",()=>alert("Sign-in is not connected in this prototype."));
+
+$("#copyCode").addEventListener("click",async()=>{
+  try{
+    await navigator.clipboard.writeText($("#editor").value);
+    log("$ clipboard\nSource copied to clipboard.");
+  }catch(e){
+    $("#editor").select();
+    log("$ clipboard\nSelect the highlighted source and copy it manually.");
+  }
+});
+
+$("#clearLog").addEventListener("click",()=>log("$"));
+$("#buildButton").addEventListener("click",()=>{
+  log('$ osforge build --target "'+$("#target").value+'"\nChecking workspace...\n✓ Source editor ready\n✓ Target selected\n! No compiler was launched: this is a browser prototype.\nInstall a suitable toolchain and build from your local terminal.');
+});
+$("#bootButton").addEventListener("click",()=>{
+  log("$ osforge boot-check\n[ ] Bootloader configured\n[ ] Kernel entry point linked\n[ ] Target architecture matches toolchain\n[ ] Boot image generated\n[ ] Test in an emulator\n\nChecklist only — no boot image was created.");
+});
+
+$("#platform").addEventListener("change",updateEnvironment);
+$("#tutorial").addEventListener("change",updateEnvironment);
+
+$("#search").addEventListener("input",e=>{
+  const q=e.target.value.toLowerCase();
+  $$(".template").forEach(t=>t.classList.toggle("hidden",!t.textContent.toLowerCase().includes(q)));
+  $$("#projectList .projectrow").forEach(r=>r.classList.toggle("hidden",!r.textContent.toLowerCase().includes(q)));
+});
+
+renderProjects();
+updateEnvironment();
+</script>
 </body>
 </html>
