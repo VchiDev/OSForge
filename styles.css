@@ -1,4 +1,3 @@
-
 :root {
   color-scheme: dark;
   --background: #07111f;
@@ -14,6 +13,10 @@
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -34,6 +37,15 @@ a:hover {
   text-decoration: underline;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -46,12 +58,14 @@ a:hover {
   padding: 16px 5%;
   background: #07111ff2;
   border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
 }
 
 .brand {
   color: white;
   font-size: 1.5rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .topbar nav {
@@ -65,7 +79,8 @@ a:hover {
   font-size: 0.92rem;
 }
 
-.topbar nav a:hover {
+.topbar nav a:hover,
+.topbar nav a[aria-current="page"] {
   color: white;
 }
 
@@ -90,6 +105,7 @@ h1 {
   font-size: clamp(2.3rem, 6vw, 4.5rem);
   line-height: 1.08;
   letter-spacing: -0.04em;
+  margin: 16px 0;
 }
 
 h1 span {
@@ -99,10 +115,12 @@ h1 span {
 h2 {
   margin-top: 35px;
   font-size: 1.8rem;
+  line-height: 1.2;
 }
 
 h3 {
   margin-top: 0;
+  line-height: 1.3;
 }
 
 p {
@@ -129,11 +147,34 @@ p {
   border-radius: 9px;
   color: white;
   font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover {
+  filter: brightness(1.1);
+  text-decoration: none;
 }
 
 .button.secondary {
   background: var(--panel);
   border-color: var(--border);
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.checks span::before {
+  content: "✓";
+  color: var(--green);
+  font-weight: 800;
+  margin-right: 8px;
 }
 
 .grid {
@@ -150,14 +191,16 @@ p {
   background: linear-gradient(145deg, var(--panel-light), var(--panel));
   border: 1px solid var(--border);
   border-radius: 13px;
+  min-width: 0;
 }
 
 .card p {
   flex: 1;
 }
 
-.card a {
-  font-weight: 700;
+.card .button {
+  align-self: flex-start;
+  margin-top: 10px;
 }
 
 .terminal {
@@ -279,6 +322,11 @@ button {
   border-radius: 12px;
 }
 
+.result li {
+  margin: 10px 0;
+  color: var(--muted);
+}
+
 footer {
   padding: 25px;
   border-top: 1px solid var(--border);
@@ -297,10 +345,14 @@ footer {
 
   .topbar nav {
     width: 100%;
+    gap: 10px 14px;
   }
 
   .container {
     padding: 20px 16px 45px;
   }
-}
 
+  .hero {
+    padding-top: 25px;
+  }
+}
