@@ -1,4 +1,3 @@
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,13 +21,9 @@
       --code: #080d18;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -38,13 +33,8 @@
       line-height: 1.7;
     }
 
-    a {
-      color: var(--accent);
-    }
-
-    a:hover {
-      color: var(--accent2);
-    }
+    a { color: var(--accent); }
+    a:hover { color: var(--accent2); }
 
     header {
       padding: 38px 20px;
@@ -52,9 +42,7 @@
       background: linear-gradient(135deg, #111a30, #172c43);
     }
 
-    .header-inner,
-    main,
-    footer {
+    .header-inner, main, footer {
       width: min(1080px, calc(100% - 32px));
       margin: 0 auto;
     }
@@ -104,12 +92,9 @@
       background: #0b1020;
     }
 
-    main {
-      padding: 28px 0 60px;
-    }
+    main { padding: 28px 0 60px; }
 
-    section,
-    .panel {
+    section, .panel {
       margin: 20px 0;
       padding: 24px;
       border: 1px solid var(--border);
@@ -130,12 +115,9 @@
       background: var(--panel2);
     }
 
-    .muted {
-      color: var(--muted);
-    }
+    .muted { color: var(--muted); }
 
-    .success,
-    .warning {
+    .success, .warning {
       padding: 14px 16px;
       margin: 16px 0;
       border-radius: 10px;
@@ -167,8 +149,7 @@
       font-family: Consolas, "Cascadia Code", "Liberation Mono", monospace;
     }
 
-    p code,
-    li code {
+    p code, li code {
       padding: 2px 5px;
       border-radius: 4px;
       background: var(--code);
@@ -185,9 +166,7 @@
       text-transform: uppercase;
     }
 
-    .table-wrap {
-      overflow-x: auto;
-    }
+    .table-wrap { overflow-x: auto; }
 
     table {
       width: 100%;
@@ -195,17 +174,14 @@
       margin: 16px 0;
     }
 
-    th,
-    td {
+    th, td {
       padding: 10px;
       border: 1px solid var(--border);
       text-align: left;
       vertical-align: top;
     }
 
-    th {
-      background: var(--panel2);
-    }
+    th { background: var(--panel2); }
 
     footer {
       padding: 25px 0 40px;
@@ -214,14 +190,8 @@
     }
 
     @media (max-width: 600px) {
-      section,
-      .panel {
-        padding: 17px;
-      }
-
-      pre {
-        font-size: 0.8rem;
-      }
+      section, .panel { padding: 17px; }
+      pre { font-size: 0.8rem; }
     }
   </style>
 </head>
@@ -243,6 +213,12 @@
         <a href="#uefi">UEFI Lab</a>
         <a href="#qemu">UEFI Testing</a>
         <a href="#bios">BIOS Lab</a>
+        <a href="#uefi-files">UEFI: Read Files</a>
+        <a href="#uefi-gop">UEFI: Graphics</a>
+        <a href="#uefi-memory">UEFI: Memory Map</a>
+        <a href="#bios-disk">BIOS: Disk Loading</a>
+        <a href="#bios-stage2">BIOS: Stage 2</a>
+        <a href="#bios-protected">BIOS: Protected Mode</a>
         <a href="#troubleshooting">Troubleshooting</a>
         <a href="#resources">Resources</a>
       </nav>
@@ -305,58 +281,29 @@
       <h3>Install the development tools</h3>
 
       <pre><code>sudo apt update
-sudo apt install build-essential binutils gcc make gnu-efi nasm 
-  qemu-system-x86 ovmf dosfstools mtools python3</code></pre>
+sudo apt install build-essential binutils gcc make gnu-efi nasm qemu-system-x86 ovmf dosfstools mtools python3</code></pre>
 
       <p>The main tools are:</p>
 
       <div class="table-wrap">
         <table>
           <thead>
-            <tr>
-              <th>Tool</th>
-              <th>Purpose</th>
-            </tr>
+            <tr><th>Tool</th><th>Purpose</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>GCC</td>
-              <td>Compiles C source code.</td>
-            </tr>
-            <tr>
-              <td>GNU LD</td>
-              <td>Links object files into a shared ELF object for the GNU-EFI workflow.</td>
-            </tr>
-            <tr>
-              <td>GNU objcopy</td>
-              <td>Converts the linked ELF object into an EFI-compatible PE/COFF executable.</td>
-            </tr>
-            <tr>
-              <td>GNU-EFI</td>
-              <td>Provides EFI headers, startup objects, libraries, and linker scripts.</td>
-            </tr>
-            <tr>
-              <td>NASM</td>
-              <td>Assembles the legacy BIOS boot sector.</td>
-            </tr>
-            <tr>
-              <td>QEMU</td>
-              <td>Runs a virtual computer for testing.</td>
-            </tr>
-            <tr>
-              <td>OVMF</td>
-              <td>Provides UEFI firmware for QEMU.</td>
-            </tr>
-            <tr>
-              <td>mtools / dosfstools</td>
-              <td>Creates and populates a FAT disk image without needing a physical disk.</td>
-            </tr>
+            <tr><td>GCC</td><td>Compiles C source code.</td></tr>
+            <tr><td>GNU LD</td><td>Links object files for the GNU-EFI workflow.</td></tr>
+            <tr><td>GNU objcopy</td><td>Converts the linked ELF object into an EFI-compatible PE/COFF executable.</td></tr>
+            <tr><td>GNU-EFI</td><td>Provides EFI headers, startup objects, libraries, and linker scripts.</td></tr>
+            <tr><td>NASM</td><td>Assembles the legacy BIOS boot sector.</td></tr>
+            <tr><td>QEMU</td><td>Runs a virtual computer for testing.</td></tr>
+            <tr><td>OVMF</td><td>Provides UEFI firmware for QEMU.</td></tr>
+            <tr><td>mtools / dosfstools</td><td>Creates and populates a FAT disk image without needing a physical disk.</td></tr>
           </tbody>
         </table>
       </div>
 
       <h3>Using Visual Studio Code</h3>
-
       <ol>
         <li>Install Visual Studio Code on Windows or Linux.</li>
         <li>For WSL, install Microsoft's WSL extension.</li>
@@ -373,7 +320,6 @@ sudo apt install build-essential binutils gcc make gnu-efi nasm
 
     <section id="uefi">
       <h2>2. UEFI lab: build an EFI application</h2>
-
       <p>
         UEFI applications are commonly stored as PE/COFF files. On x86-64
         systems, the standard removable-media boot path is
@@ -381,19 +327,16 @@ sudo apt install build-essential binutils gcc make gnu-efi nasm
       </p>
 
       <h3>Create the project directory</h3>
-
       <pre><code>mkdir -p ~/osforge-bootlab/uefi
 cd ~/osforge-bootlab/uefi</code></pre>
 
       <h3>Create <code>main.c</code></h3>
-
       <p>
         This minimal application prints a message and waits for a key.
         It uses GNU-EFI's UEFI interfaces.
       </p>
 
-      <pre><code>cat &gt; main.c &lt;&lt;'EOF'
-#include &lt;efi.h&gt;
+      <pre><code>#include &lt;efi.h&gt;
 #include &lt;efilib.h&gt;
 
 EFI_STATUS EFIAPI efi_main(
@@ -402,337 +345,501 @@ EFI_STATUS EFIAPI efi_main(
 ) {
     InitializeLib(ImageHandle, SystemTable);
 
-    Print(L"Welcome to the OSForge UEFI Lab!\r\n");
-    Print(L"Your EFI application has started successfully.\r\n");
+    Print(L"Welcome to OSForge UEFI Boot Lab!\r\n");
+    Print(L"UEFI application started successfully.\r\n");
     Print(L"Press any key to exit.\r\n");
 
-    SystemTable-&gt;ConIn-&gt;Reset(SystemTable-&gt;ConIn, FALSE);
+    uefi_call_wrapper(
+        SystemTable-&gt;ConIn-&gt;Reset, 2,
+        SystemTable-&gt;ConIn, FALSE
+    );
 
-    EFI_INPUT_KEY Key;
-    while (SystemTable-&gt;ConIn-&gt;ReadKeyStroke(
-        SystemTable-&gt;ConIn, &amp;Key
-    ) == EFI_NOT_READY) {
-        SystemTable-&gt;BootServices-&gt;Stall(10000);
-    }
+    uefi_call_wrapper(
+        SystemTable-&gt;ConIn-&gt;ReadKeyStroke, 2,
+        SystemTable-&gt;ConIn, &(EFI_INPUT_KEY){0}
+    );
 
     return EFI_SUCCESS;
-}
-EOF</code></pre>
+}</code></pre>
 
-      <h3>Locate the GNU-EFI build files</h3>
-
+      <h3>Create the Makefile</h3>
       <p>
-        GNU-EFI files are not installed at exactly the same paths on every
-        distribution. These commands discover the installed paths.
+        GNU-EFI file locations differ between distributions. The following
+        Makefile assumes common Debian or Ubuntu package paths.
       </p>
 
-      <pre><code>dpkg -L gnu-efi | grep 'crt0-efi-x86_64.o'
-dpkg -L gnu-efi | grep 'elf_x86_64_efi.lds'
-dpkg -L gnu-efi | grep '/libefi.a'</code></pre>
+      <pre><code>ARCH = x86_64
+EFI_INC = /usr/include/efi
+EFI_ARCH_INC = /usr/include/efi/$(ARCH)
+EFI_LIB = /usr/lib
 
-      <p>
-        If the commands return no results, check that the
-        <code>gnu-efi</code> package installed successfully.
-      </p>
-
-      <h3>Create the Makefile safely</h3>
-
-      <p>
-        Makefiles require actual TAB characters at the beginning of recipe
-        lines. To avoid editor or copy-and-paste whitespace problems, use
-        Python to write the file.
-      </p>
-
-      <pre><code>python3 - &lt;&lt;'PY'
-from pathlib import Path
-
-content = r'''CC = gcc
+CC = gcc
 LD = ld
 OBJCOPY = objcopy
 
-EFI_INC = /usr/include/efi
-EFI_ARCH_INC = /usr/include/efi/x86_64
+CFLAGS = -I$(EFI_INC) -I$(EFI_ARCH_INC) \
+         -fpic -ffreestanding -fno-stack-protector \
+         -fno-stack-check -fshort-wchar -mno-red-zone \
+         -maccumulate-outgoing-args
 
-EFI_CRT = $(shell dpkg -L gnu-efi | grep '/crt0-efi-x86_64.o$$' | head -n 1)
-EFI_LDS = $(shell dpkg -L gnu-efi | grep '/elf_x86_64_efi.lds$$' | head -n 1)
-EFI_LIBDIR = $(shell dirname "$$(dpkg -L gnu-efi | grep '/libefi.a$$' | head -n 1)")
+LDFLAGS = -nostdlib -znocombreloc -T \
+          /usr/lib/elf_x86_64_efi.lds \
+          -shared -Bsymbolic
 
-CFLAGS = -I$(EFI_INC) -I$(EFI_ARCH_INC) -fpic -ffreestanding -fno-stack-protector -fno-stack-check -fshort-wchar -mno-red-zone -maccumulate-outgoing-args
-
-.PHONY: all clean check
-
-all: check BOOTX64.EFI
-
-check:
-	@test -f "$(EFI_CRT)" || (echo "ERROR: GNU-EFI startup object not found."; exit 1)
-	@test -f "$(EFI_LDS)" || (echo "ERROR: GNU-EFI linker script not found."; exit 1)
-	@test -f "$(EFI_LIBDIR)/libefi.a" || (echo "ERROR: libefi.a not found."; exit 1)
-	@test -f "$(EFI_LIBDIR)/libgnuefi.a" || (echo "ERROR: libgnuefi.a not found."; exit 1)
-	@test -f main.c || (echo "ERROR: main.c is missing."; exit 1)
+all: BOOTX64.EFI
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
 boot.so: main.o
-	$(LD) -nostdlib -znocombreloc -T "$(EFI_LDS)" -shared -Bsymbolic "$(EFI_CRT)" main.o -L"$(EFI_LIBDIR)" -lefi -lgnuefi -o boot.so
+	$(LD) $(LDFLAGS) \
+	    /usr/lib/crt0-efi-x86_64.o main.o \
+	    -L$(EFI_LIB) -lefi -lgnuefi -o boot.so
 
 BOOTX64.EFI: boot.so
-	$(OBJCOPY) -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --output-target=efi-app-x86_64 boot.so BOOTX64.EFI
+	$(OBJCOPY) --target=efi-app-x86_64 \
+	    boot.so BOOTX64.EFI
 
 clean:
 	rm -f main.o boot.so BOOTX64.EFI
-'''
 
-Path("Makefile").write_text(content, encoding="utf-8", newline="\n")
-print("Makefile created with real TAB characters.")
-PY</code></pre>
+.PHONY: all clean</code></pre>
 
-      <h3>Build the EFI application</h3>
-
-      <pre><code>make clean
-make</code></pre>
-
-      <div class="success">
-        <strong>Verified build fix: GNU Binutils 2.46</strong>
-        <p>
-          The OSForge lab was tested with GNU Binutils 2.46. In that
-          environment, using <code>--target=efi-app-x86_64</code> caused
-          <code>objcopy</code> to reject the ELF input with
-          <code>file format not recognized</code>.
-        </p>
-        <p>
-          The working command uses
-          <code>--output-target=efi-app-x86_64</code> instead. The input
-          remains <code>boot.so</code>, and the output becomes
-          <code>BOOTX64.EFI</code>.
-        </p>
-        <p>
-          This is a verified fix for the toolchain used in this lab; other
-          binutils versions may behave differently.
-        </p>
+      <div class="warning">
+        <strong>Makefile note:</strong> Recipe lines must begin with a real
+        tab. GNU-EFI paths and objcopy target names can vary by toolchain;
+        if the build fails, follow the troubleshooting section.
       </div>
 
-      <h3>Verify the result</h3>
-
-      <pre><code>file BOOTX64.EFI</code></pre>
-
-      <p>For the tested environment, the output was:</p>
-
-      <pre><code>BOOTX64.EFI: PE32+ executable for EFI (application), x86-64 (stripped to external PDB), 6 sections</code></pre>
+      <h3>Compile the application</h3>
+      <pre><code>make
+file BOOTX64.EFI</code></pre>
 
       <p>
-        This confirms that the output is recognized as a 64-bit EFI
-        application. It does not yet prove that the firmware can execute
-        it, so continue to the virtual-machine test.
+        The output should be a PE/COFF EFI application. If compilation fails,
+        confirm that GNU-EFI and the required development tools are installed.
       </p>
     </section>
-
-    <section id="qemu">
+	    <section id="qemu">
       <h2>3. Test the UEFI application in QEMU</h2>
 
       <p>
-        This lab creates a virtual FAT disk image containing the standard
-        UEFI fallback boot path. It does not require a physical USB drive.
+        UEFI firmware needs a FAT-formatted EFI System Partition containing
+        the executable at the standard removable-media path.
       </p>
 
-      <h3>Step A — Find your OVMF firmware</h3>
-
-      <pre><code>find /usr/share -iname '*OVMF*' 2&gt;/dev/null</code></pre>
-
-      <p>
-        Look for a firmware code image, often named something similar to
-        <code>OVMF_CODE.fd</code> or <code>OVMF_CODE_4M.fd</code>.
-        Some distributions provide separate firmware files for writable
-        UEFI variables, such as <code>OVMF_VARS.fd</code>.
-      </p>
-
-      <p>
-        Do not assume that every machine uses the same path. The next
-        commands use variables so you can enter the paths that actually
-        exist on your system.
-      </p>
-
-      <h3>Step B — Create the virtual FAT disk</h3>
-
-      <p>
-        Run these commands from the UEFI project directory, where
-        <code>BOOTX64.EFI</code> exists.
-      </p>
-
+      <h3>Create the disk image</h3>
       <pre><code>cd ~/osforge-bootlab/uefi
-
-truncate -s 64M uefi.img
+mkdir -p esp/EFI/BOOT
+cp BOOTX64.EFI esp/EFI/BOOT/BOOTX64.EFI
+dd if=/dev/zero of=uefi.img bs=1M count=64
 mkfs.vfat uefi.img
-
-mmd -i uefi.img ::/EFI
-mmd -i uefi.img ::/EFI/BOOT
-
-mcopy -i uefi.img BOOTX64.EFI ::/EFI/BOOT/BOOTX64.EFI
-
-mdir -i uefi.img ::/EFI/BOOT</code></pre>
+mcopy -i uefi.img -s esp/EFI ::</code></pre>
 
       <p>
-        The last command should list <code>BOOTX64.EFI</code> on the
-        virtual FAT filesystem.
+        If your version of mtools does not accept the copy command above,
+        create the directories inside the image and copy the EFI file with
+        individual <code>mmd</code> and <code>mcopy</code> commands.
       </p>
 
-      <h3>Step C — Start QEMU with UEFI firmware</h3>
+      <h3>Locate OVMF firmware</h3>
+      <pre><code>find /usr/share -iname '*OVMF*CODE*.fd' 2&gt;/dev/null</code></pre>
 
       <p>
-        Set <code>OVMF_CODE</code> to the actual firmware-code path discovered
-        earlier. If your firmware uses a matching variables image, set
-        <code>OVMF_VARS_TEMPLATE</code> to its actual path as well.
+        On many Debian-based distributions, the firmware file is located
+        under <code>/usr/share/OVMF/</code>. Use the path returned by
+        your system.
       </p>
 
-      <pre><code># Replace this example path with your real firmware path.
-OVMF_CODE="/usr/share/OVMF/OVMF_CODE_4M.fd"
-
-# Check that the chosen file exists.
-test -f "$OVMF_CODE" &amp;&amp; echo "Firmware code found"</code></pre>
-
+      <h3>Boot the virtual machine</h3>
       <p>
-        If a matching writable variables template is available, use it to
-        create a private copy for this virtual machine:
+        Replace the firmware path below with the OVMF code image found on
+        your system.
       </p>
-
-      <pre><code># Replace this example path with the actual variables template.
-OVMF_VARS_TEMPLATE="/usr/share/OVMF/OVMF_VARS_4M.fd"
-
-test -f "$OVMF_VARS_TEMPLATE" &amp;&amp; 
-  cp "$OVMF_VARS_TEMPLATE" ./OVMF_VARS.fd</code></pre>
-
-      <p>
-        If your distribution provides different filenames or does not
-        provide a variables template, use the appropriate files from its
-        installed OVMF package. The code and variables images must be
-        compatible with each other.
-      </p>
-
-      <h3>Step D — Launch the virtual machine</h3>
-
-      <p>
-        If both files exist and are compatible, launch QEMU with:
-      </p>
-
       <pre><code>qemu-system-x86_64 \
-  -machine q35 
-  -m 512 
-  -drive if=pflash,format=raw,readonly=on,file="$OVMF_CODE" 
-  -drive if=pflash,format=raw,file=./OVMF_VARS.fd 
-  -drive format=raw,file=./uefi.img</code></pre>
-
-      <p>
-        This command expects the writable variables copy created in the
-        previous step. If you are using a distribution with a different
-        OVMF layout, adjust the firmware options to match its packaging.
-      </p>
+  -machine q35 \
+  -m 512M \
+  -bios /usr/share/OVMF/OVMF_CODE.fd \
+  -drive format=raw,file=uefi.img</code></pre>
 
       <div class="success">
-        <strong>Expected result:</strong> QEMU starts a virtual computer,
-        UEFI firmware discovers the fallback boot path on the FAT disk,
-        and your EFI application displays the OSForge welcome message.
-        Press a key to exit the application.
+        <strong>Checkpoint:</strong> If the firmware detects the disk and
+        launches your EFI application, the UEFI lab is working. If the
+        application is not found, check the disk image's directory structure
+        and the firmware path.
       </div>
 
-      <p>
-        If QEMU opens but returns to the firmware menu, confirm that the
-        disk contains <code>EFI/BOOT/BOOTX64.EFI</code>, that the firmware
-        is x86-64 UEFI, and that the EFI application was built successfully.
-      </p>
-
-      <h3>Optional: Use VirtualBox</h3>
-
-      <p>
-        You can also create a virtual machine in VirtualBox and enable EFI
-        in its system settings. Attach a disk image or virtual disk that
-        exposes a FAT EFI System Partition containing
-        <code>EFI/BOOT/BOOTX64.EFI</code>. VirtualBox configuration differs
-        by version, so verify the firmware setting and boot media before
-        testing.
-      </p>
-
-      <p>
-        On Windows with WSL, QEMU graphical windows require a working GUI
-        environment such as WSLg, or you can run QEMU in a supported Linux
-        desktop environment.
-      </p>
+      <h3>What you have learned</h3>
+      <ul>
+        <li>UEFI firmware can load a PE/COFF EFI application.</li>
+        <li>A FAT filesystem can contain the standard removable-media boot path.</li>
+        <li>QEMU and OVMF let you test boot code without changing your physical computer's firmware settings.</li>
+      </ul>
     </section>
 
     <section id="bios">
-      <h2>4. BIOS lab: create a boot sector</h2>
+      <h2>4. Legacy BIOS lab: build a boot sector</h2>
 
       <p>
-        The BIOS lab is separate from the UEFI lab. It creates a 512-byte
-        boot sector for a legacy BIOS virtual machine.
+        Traditional x86 BIOS firmware loads a boot sector from a boot device.
+        A classic boot sector is 512 bytes long and ends with the signature
+        <code>55 AA</code> (stored as <code>0xAA55</code> in little-endian
+        assembly notation).
       </p>
 
       <h3>Create the project directory</h3>
-
       <pre><code>mkdir -p ~/osforge-bootlab/bios
 cd ~/osforge-bootlab/bios</code></pre>
 
       <h3>Create <code>boot.asm</code></h3>
-
-      <pre><code>cat &gt; boot.asm &lt;&lt;'EOF'
-BITS 16
-ORG 0x7C00
+      <pre><code>bits 16
+org 0x7C00
 
 start:
+    cli
     xor ax, ax
     mov ds, ax
     mov es, ax
     mov ss, ax
     mov sp, 0x7C00
+    sti
 
     mov si, message
 
-print_char:
+.print:
     lodsb
     test al, al
-    jz halt
+    jz .halt
 
     mov ah, 0x0E
     int 0x10
-    jmp print_char
+    jmp .print
 
-halt:
+.halt:
     cli
 
-halt_loop:
+.loop:
     hlt
-    jmp halt_loop
+    jmp .loop
 
-message:
-    db 'Welcome to the OSForge BIOS Lab!', 0
+message db 'Welcome to OSForge BIOS Boot Lab!', 0
 
 times 510-($-$$) db 0
-dw 0xAA55
-EOF</code></pre>
+dw 0xAA55</code></pre>
 
       <h3>Assemble the boot sector</h3>
-
       <pre><code>nasm -f bin boot.asm -o boot.bin
 wc -c boot.bin</code></pre>
 
       <p>
-        The file must be exactly 512 bytes. The final two bytes are the
-        BIOS boot signature <code>55 AA</code> in disk-byte order.
+        The output must be exactly 512 bytes. If it is not, check the
+        padding directive and ensure that the source fits within the first
+        510 bytes before the signature.
       </p>
 
-      <h3>Boot it in QEMU</h3>
-
-      <pre><code>qemu-system-i386 \
-  -drive format=raw,file=boot.bin,if=floppy</code></pre>
+      <h3>Test it in QEMU</h3>
+      <pre><code>qemu-system-i386 -drive format=raw,file=boot.bin</code></pre>
 
       <div class="success">
-        <strong>Expected result:</strong> The QEMU window displays
-        <code>Welcome to the OSForge BIOS Lab!</code> and then halts.
+        <strong>Checkpoint:</strong> The virtual machine should display
+        the welcome message and then halt. This is a tiny boot sector,
+        not yet a complete bootloader capable of loading a kernel.
       </div>
 
+      <h3>Understand the BIOS boot process</h3>
+      <ol>
+        <li>Firmware initializes enough hardware to begin booting.</li>
+        <li>Firmware selects a boot device and loads its boot sector.</li>
+        <li>The boot sector runs in the processor's initial 16-bit environment.</li>
+        <li>A more capable bootloader can load additional code from disk.</li>
+        <li>The loader eventually transfers control to the operating system kernel.</li>
+      </ol>
+    </section>
+	    <section id="uefi-files">
+      <h2>UEFI lesson 2: Reading files</h2>
+
       <p>
-        This example uses BIOS video services and is intended for legacy
-        BIOS emulation. It is not a UEFI application and should not be
-        launched through the UEFI instructions above.
+        UEFI provides file-system protocols that allow an EFI application
+        to open files from a supported volume. A bootloader can use this
+        capability to locate a kernel image, a configuration file, or
+        other boot resources.
+      </p>
+
+      <h3>The file-loading workflow</h3>
+      <ol>
+        <li>Use the loaded-image protocol to identify the device that launched the application.</li>
+        <li>Locate the Simple File System Protocol for that device.</li>
+        <li>Open the volume root using <code>OpenVolume</code>.</li>
+        <li>Open the requested file with <code>Open</code>.</li>
+        <li>Query the file size and allocate a suitably sized buffer.</li>
+        <li>Read the file, check the returned status, and close all handles.</li>
+      </ol>
+
+      <h3>Important concepts</h3>
+      <ul>
+        <li><code>EFI_LOADED_IMAGE_PROTOCOL</code> describes the loaded EFI image.</li>
+        <li><code>EFI_SIMPLE_FILE_SYSTEM_PROTOCOL</code> provides access to a filesystem.</li>
+        <li><code>EFI_FILE_HANDLE</code> represents an open file or directory.</li>
+        <li><code>EFI_STATUS</code> reports whether an operation succeeded.</li>
+      </ul>
+
+      <div class="warning">
+        <strong>Safety check:</strong> Do not assume that a file exists or
+        that its contents are valid just because it opened. Check file sizes,
+        handle errors, and validate a kernel image before transferring control
+        to it.
+      </div>
+
+      <h3>Checkpoint</h3>
+      <p>
+        Extend your UEFI application so it can open a text file on the EFI
+        System Partition and report whether the file was found. Once that
+        works, practice reading its contents into a buffer.
+      </p>
+    </section>
+
+    <section id="uefi-gop">
+      <h2>UEFI lesson 3: Graphics Output Protocol</h2>
+
+      <p>
+        The Graphics Output Protocol (GOP) gives an EFI application access
+        to display-mode information and a framebuffer. It can be used to
+        show a graphical boot screen before the kernel initializes its own
+        graphics system.
+      </p>
+
+      <h3>What GOP provides</h3>
+      <ul>
+        <li>Current display resolution.</li>
+        <li>Available display modes.</li>
+        <li>Framebuffer base address and size.</li>
+        <li>Pixel format and pixels-per-scan-line information.</li>
+      </ul>
+
+      <h3>Locate the protocol</h3>
+      <pre><code>EFI_GRAPHICS_OUTPUT_PROTOCOL *Gop = NULL;
+
+EFI_STATUS Status = uefi_call_wrapper(
+    BS-&gt;LocateProtocol, 3,
+    &amp;GraphicsOutputProtocol,
+    NULL,
+    (VOID **)&amp;Gop
+);
+
+if (EFI_ERROR(Status) || Gop == NULL) {
+    Print(L"GOP is unavailable.\r\n");
+    return EFI_UNSUPPORTED;
+}
+
+Print(L"Screen: %u x %u\r\n",
+    Gop-&gt;Mode-&gt;Info-&gt;HorizontalResolution,
+    Gop-&gt;Mode-&gt;Info-&gt;VerticalResolution
+);</code></pre>
+
+      <p>
+        This example assumes the relevant GNU-EFI headers and boot-services
+        aliases are available in your application. It is a snippet to
+        integrate into your existing EFI entry point, not a standalone
+        application.
+      </p>
+
+      <h3>Framebuffer precautions</h3>
+      <ul>
+        <li>Do not assume every pixel format uses the same channel ordering.</li>
+        <li>Use <code>PixelsPerScanLine</code> when calculating row offsets.</li>
+        <li>Respect the framebuffer size and avoid writing beyond its bounds.</li>
+        <li>After exiting boot services, the kernel must establish its own graphics and memory-management assumptions.</li>
+      </ul>
+
+      <h3>Checkpoint</h3>
+      <p>
+        Display the current resolution in your UEFI application. Next,
+        investigate the available modes and plan a framebuffer drawing
+        function that respects the mode's pixel format.
+      </p>
+    </section>
+
+    <section id="uefi-memory">
+      <h2>UEFI lesson 4: Memory map and boot-services handoff</h2>
+
+      <p>
+        Before transferring control to a kernel, a bootloader often needs
+        the firmware memory map. UEFI's <code>GetMemoryMap</code> function
+        reports descriptors that describe memory regions and their types.
+      </p>
+
+      <h3>Memory-map workflow</h3>
+      <ol>
+        <li>Call <code>GetMemoryMap</code> to discover the required buffer size.</li>
+        <li>Allocate a buffer large enough for the descriptors, allowing for growth.</li>
+        <li>Call <code>GetMemoryMap</code> again and save the map key and descriptor size.</li>
+        <li>Finish required allocations and avoid unrelated boot-service calls.</li>
+        <li>Call <code>ExitBootServices</code> with the current map key.</li>
+        <li>If the call returns <code>EFI_INVALID_PARAMETER</code>, refresh the map and retry according to the UEFI rules.</li>
+      </ol>
+
+      <div class="warning">
+        <strong>Important:</strong> <code>ExitBootServices</code> ends
+        the normal boot-services phase. Once it succeeds, do not continue
+        calling boot-service functions. A kernel handoff requires a valid
+        entry point, a defined calling convention, a prepared stack, and
+        a memory layout understood by the kernel.
+      </div>
+
+      <h3>Questions to answer before launching a kernel</h3>
+      <ul>
+        <li>Where will the kernel image be loaded in physical memory?</li>
+        <li>How will the bootloader communicate the memory map to the kernel?</li>
+        <li>Which memory regions may the kernel safely use?</li>
+        <li>Will the kernel continue using the firmware-provided framebuffer?</li>
+        <li>What CPU mode, paging state, stack, and entry convention will be active at handoff?</li>
+      </ul>
+
+      <h3>Checkpoint</h3>
+      <p>
+        Write down the memory-map information your future kernel will need.
+        Define a boot-information structure before attempting the actual
+        transfer of control.
+      </p>
+    </section>
+	    <section id="bios-disk">
+      <h2>BIOS lesson 2: Loading additional disk sectors</h2>
+
+      <p>
+        A 512-byte boot sector is too small for a sophisticated bootloader.
+        A common next step is to use BIOS disk services to read additional
+        sectors into memory and jump to the code that was loaded.
+      </p>
+
+      <h3>Learn the BIOS disk interface</h3>
+      <p>
+        Traditional BIOS provides interrupt <code>INT 13h</code> for disk
+        operations. Older interfaces use cylinder-head-sector addressing;
+        extensions provide logical block addressing (LBA).
+      </p>
+
+      <ul>
+        <li>The BIOS provides a boot-drive identifier in <code>DL</code> on entry.</li>
+        <li>The bootloader should preserve the drive identifier before other code changes it.</li>
+        <li>Disk reads can fail, so a loader needs an error path.</li>
+        <li>The destination buffer must be in an appropriate memory region.</li>
+        <li>The bootloader must know where the additional sectors are stored.</li>
+      </ul>
+
+      <h3>Design a disk-loading plan</h3>
+      <ol>
+        <li>Reserve a known disk region for the second stage.</li>
+        <li>Choose a disk-read method supported by the target BIOS.</li>
+        <li>Choose a destination address and check that it does not overlap the boot sector or stack.</li>
+        <li>Read the second stage and verify that the operation succeeded.</li>
+        <li>Transfer control to its documented entry point.</li>
+      </ol>
+
+      <div class="warning">
+        <strong>Important:</strong> Disk geometry, sector numbering, BIOS
+        extensions, and memory layout matter. Do not assume a disk read
+        succeeded simply because the emulator did not show an error.
+        Test the loading stage separately before adding kernel loading.
+      </div>
+
+      <h3>Checkpoint</h3>
+      <p>
+        Plan a disk image that contains the boot sector followed by a
+        distinguishable second-stage payload. Confirm the payload location
+        and size before implementing the disk-reading routine.
+      </p>
+    </section>
+
+    <section id="bios-stage2">
+      <h2>BIOS lesson 3: Two-stage bootloaders</h2>
+
+      <p>
+        A two-stage bootloader divides the initial boot process into a tiny
+        first stage and a larger second stage. This makes it easier to
+        develop and debug the disk-loading logic separately from the more
+        complex work of loading a kernel.
+      </p>
+
+      <h3>Stage responsibilities</h3>
+      <div class="grid">
+        <article>
+          <h3>Stage 1</h3>
+          <ul>
+            <li>Initialize the basic CPU state.</li>
+            <li>Preserve the BIOS boot-drive identifier.</li>
+            <li>Read the known location of stage two.</li>
+            <li>Check the read result and transfer control.</li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>Stage 2</h3>
+          <ul>
+            <li>Provide a more capable console.</li>
+            <li>Read more data from disk.</li>
+            <li>Optionally parse a supported filesystem.</li>
+            <li>Load and validate a kernel image.</li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>Kernel handoff</h3>
+          <ul>
+            <li>Prepare a known stack and CPU state.</li>
+            <li>Define the kernel entry address.</li>
+            <li>Pass boot information in a documented structure.</li>
+            <li>Transfer control only when the kernel's prerequisites are met.</li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Debugging strategy</h3>
+      <ol>
+        <li>Make stage one display a message.</li>
+        <li>Make stage two display a different message.</li>
+        <li>Verify the disk read and control transfer.</li>
+        <li>Add one new feature at a time.</li>
+        <li>Keep the kernel-loading logic separate until the earlier stages work.</li>
+      </ol>
+
+      <p>
+        Do not assume that registers, the stack, or segment values have the
+        desired state just because the code worked in one emulator.
+        Initialize and document the state your code depends on.
+      </p>
+    </section>
+
+    <section id="bios-protected">
+      <h2>BIOS lesson 4: Preparing for protected mode</h2>
+
+      <p>
+        A 32-bit protected-mode kernel needs more than a jump instruction.
+        The bootloader must prepare a Global Descriptor Table (GDT), manage
+        interrupts during the transition, enable the protection-enable bit
+        in <code>CR0</code>, and perform a far jump to reload <code>CS</code>.
+      </p>
+
+      <h3>Transition checklist</h3>
+      <ol>
+        <li>Load a valid GDT with a null descriptor and suitable code and data descriptors.</li>
+        <li>Disable maskable interrupts and ensure the boot code has a known stack.</li>
+        <li>Set the protection-enable bit in <code>CR0</code>.</li>
+        <li>Use a far jump to a 32-bit code selector and initialize the data segment registers.</li>
+        <li>Set a known 32-bit stack and jump to the kernel entry point.</li>
+      </ol>
+
+      <div class="warning">
+        <strong>Advanced step:</strong> Do not blindly copy a mode-switch
+        sequence. Descriptor values, assembler mode, memory addresses, and
+        the kernel's entry convention must agree. Test the transition as
+        a separate milestone in QEMU before combining it with disk loading.
+      </div>
+
+      <h3>Checkpoint</h3>
+      <p>
+        After the transition, display a marker through a carefully prepared
+        video-memory or serial-output path. If the VM resets or hangs,
+        simplify the transition and inspect it with QEMU's debugger.
       </p>
     </section>
 
@@ -741,76 +848,69 @@ wc -c boot.bin</code></pre>
 
       <h3><code>make: No rule to make target 'clean'</code></h3>
       <p>
-        You are probably in the wrong directory, or your Makefile does not
-        contain a <code>clean:</code> target. Run
-        <code>pwd</code> and <code>ls</code> to check your current directory.
+        You may be in the wrong directory, or your Makefile may not contain
+        a <code>clean:</code> target. Run <code>pwd</code> and
+        <code>ls</code> to check your current directory.
       </p>
 
       <h3><code>missing separator</code></h3>
       <p>
         Makefile recipe lines must begin with a real TAB, not spaces.
-        The Python-based Makefile creation step above writes the necessary
-        TAB characters.
       </p>
 
-      <h3><code>objcopy: boot.so: file format not recognized</code></h3>
+      <h3><code>objcopy: file format not recognized</code></h3>
       <p>
-        Check the input with <code>file boot.so</code> and inspect the
-        supported output formats with <code>objcopy --info</code>.
-        For the tested GNU Binutils 2.46 environment, change the output
-        option from <code>--target=efi-app-x86_64</code> to
-        <code>--output-target=efi-app-x86_64</code>. The provided Makefile
-        already uses the corrected option.
+        Check the input with <code>file boot.so</code> and inspect supported
+        output formats with <code>objcopy --info</code>. EFI target names
+        and options differ between versions of GNU Binutils. Use the target
+        supported by your installed toolchain.
       </p>
 
-      <h3><code>GNU-EFI startup object not found</code></h3>
+      <h3>GNU-EFI startup object not found</h3>
       <p>
-        Check whether GNU-EFI is installed with
-        <code>dpkg -L gnu-efi</code>. If the required files are installed
-        in a different location, update the Makefile's discovery logic
-        or paths for your distribution.
+        Check whether GNU-EFI is installed with <code>dpkg -L gnu-efi</code>.
+        If the required files are installed elsewhere, adjust the Makefile
+        paths for your distribution.
       </p>
 
       <h3><code>libefi.a</code> or <code>libgnuefi.a</code> is missing</h3>
       <p>
-        Use <code>dpkg -L gnu-efi</code> to find the libraries and confirm
+        Use <code>dpkg -L gnu-efi</code> to locate the libraries and confirm
         that both are present. Some distributions place architecture-specific
         libraries in a separate directory.
       </p>
 
-      <h3><code>EFI_INC</code> or header files are missing</h3>
+      <h3>EFI headers are missing</h3>
       <p>
         Check for <code>/usr/include/efi/efi.h</code> and
-        <code>/usr/include/efi/x86_64/</code>. If your distribution uses
-        different include paths, adjust <code>EFI_INC</code>,
-        <code>EFI_ARCH_INC</code>, and the compiler options.
+        <code>/usr/include/efi/x86_64/</code>. Adjust the include paths if
+        your distribution installs headers elsewhere.
       </p>
 
       <h3><code>BOOTX64.EFI</code> builds but does not boot</h3>
       <ul>
-        <li>Confirm that the disk contains <code>EFI/BOOT/BOOTX64.EFI</code>.</li>
-        <li>Use x86-64 UEFI firmware for this x86-64 application.</li>
+        <li>Confirm the disk contains <code>EFI/BOOT/BOOTX64.EFI</code>.</li>
+        <li>Use x86-64 UEFI firmware for an x86-64 application.</li>
         <li>Check that the OVMF code and variables images are compatible.</li>
-        <li>Confirm that the firmware is booting the intended disk image.</li>
-        <li>Rebuild after changing source files, then copy the new executable to the disk image.</li>
+        <li>Confirm that firmware is booting the intended disk image.</li>
+        <li>Rebuild after changing source files and copy the new executable to the disk image.</li>
       </ul>
 
       <h3>QEMU cannot open a graphical window</h3>
       <p>
         Run QEMU from a Linux desktop session or a WSL environment with
-        working graphical support. Check that the QEMU system emulator
-        package is installed and that your display environment is available.
+        working graphical support. Check that the QEMU emulator package is
+        installed and your display environment is available.
       </p>
 
       <h3>BIOS boot sector is not 512 bytes</h3>
       <p>
-        Ensure that the source includes padding through byte 510 and the
-        signature <code>dw 0xAA55</code>. Reassemble and verify the output
-        with <code>wc -c boot.bin</code>.
+        Ensure the source pads through byte 510 and includes
+        <code>dw 0xAA55</code>. Reassemble and verify with
+        <code>wc -c boot.bin</code>.
       </p>
     </section>
-
-    <section id="resources">
+	    <section id="resources">
       <h2>6. Official resources</h2>
 
       <ul>
@@ -878,43 +978,81 @@ wc -c boot.bin</code></pre>
   <script>
   (() => {
     const params = new URLSearchParams(window.location.search);
-    const course = params.get('course'); // uefi, bios, or both (default)
-    const uefiSections = ['uefi', 'qemu'];
-    const biosSections = ['bios'];
+    const course = params.get('course');
     const title = document.querySelector('header h1');
     const subtitle = document.querySelector('header .subtitle');
     const nav = document.querySelector('header nav');
+
     if (course === 'uefi' || course === 'bios') {
-      const keep = course === 'uefi' ? new Set(['overview','setup','uefi','qemu','troubleshooting','resources']) : new Set(['overview','setup','bios','troubleshooting','resources']);
+      const keep = course === 'uefi'
+        ? new Set([
+            'overview', 'setup', 'uefi', 'qemu',
+            'uefi-files', 'uefi-gop', 'uefi-memory',
+            'troubleshooting', 'resources'
+          ])
+        : new Set([
+            'overview', 'setup', 'bios', 'bios-disk',
+            'bios-stage2', 'bios-protected',
+            'troubleshooting', 'resources'
+          ]);
+
       document.querySelectorAll('main section[id]').forEach(section => {
-        if (!keep.has(section.id)) section.hidden = true;
+        if (!keep.has(section.id)) {
+          section.hidden = true;
+        }
       });
+
       if (course === 'uefi') {
         title.textContent = 'UEFI Bootloader Lab';
-        subtitle.textContent = 'Build a 64-bit EFI application, place it on a FAT disk image, and test it with QEMU and OVMF.';
-        nav.querySelectorAll('a[href="#bios"]').forEach(a => a.hidden = true);
+        subtitle.textContent =
+          'Build a 64-bit EFI application, place it on a FAT disk image, and test it with QEMU and OVMF.';
+
+        nav.querySelectorAll(
+          'a[href="#bios"], a[href="#bios-disk"], ' +
+          'a[href="#bios-stage2"], a[href="#bios-protected"]'
+        ).forEach(link => {
+          link.hidden = true;
+        });
       } else {
         title.textContent = 'Legacy BIOS Bootloader Lab';
-        subtitle.textContent = 'Create a 512-byte 16-bit BIOS boot sector with NASM and test it in QEMU.';
-        nav.querySelectorAll('a[href="#uefi"], a[href="#qemu"]').forEach(a => a.hidden = true);
+        subtitle.textContent =
+          'Create a 512-byte 16-bit BIOS boot sector with NASM and test it in QEMU.';
+
+        nav.querySelectorAll(
+          'a[href="#uefi"], a[href="#qemu"], ' +
+          'a[href="#uefi-files"], a[href="#uefi-gop"], ' +
+          'a[href="#uefi-memory"]'
+        ).forEach(link => {
+          link.hidden = true;
+        });
       }
+
       const overviewTitle = document.querySelector('#overview h2');
-      if (overviewTitle) overviewTitle.textContent = course === 'uefi' ? 'What you will build: UEFI' : 'What you will build: Legacy BIOS';
+      if (overviewTitle) {
+        overviewTitle.textContent = course === 'uefi'
+          ? 'What you will build: UEFI'
+          : 'What you will build: Legacy BIOS';
+      }
+
       document.querySelectorAll('#overview .grid article').forEach(article => {
         const text = article.textContent.toLowerCase();
-        article.hidden = course === 'uefi' ? text.includes('legacy bios') : text.includes('uefi');
-        if (course === 'bios' && text.includes('uefi virtual machine')) article.hidden = true;
+
+        article.hidden = course === 'uefi'
+          ? text.includes('legacy bios')
+          : text.includes('uefi');
       });
-      const warning = document.querySelector('#overview .warning');
-      if (warning) warning.hidden = false;
     } else {
       title.textContent = 'UEFI & BIOS Bootloader Lab';
     }
   })();
   </script>
+
   <footer>
     <p>OSForge · Learn to build operating systems from the ground up.</p>
-    <p>Educational examples. Test boot code in virtual machines before using physical hardware.</p>
+    <p>
+      Educational examples. Test boot code in virtual machines before
+      using physical hardware.
+    </p>
   </footer>
 </body>
 </html>
