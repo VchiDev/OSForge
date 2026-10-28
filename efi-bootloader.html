@@ -230,6 +230,7 @@
   <header>
     <div class="header-inner">
       <div class="brand">OSForge · Operating System Development</div>
+      <p><a href="planner.html">← Back to OS Planner</a></p>
       <h1>UEFI &amp; BIOS Bootloader Lab</h1>
       <p class="subtitle">
         Learn how computers start operating systems. Build a UEFI application,
@@ -874,6 +875,43 @@ wc -c boot.bin</code></pre>
     </section>
   </main>
 
+  <script>
+  (() => {
+    const params = new URLSearchParams(window.location.search);
+    const course = params.get('course'); // uefi, bios, or both (default)
+    const uefiSections = ['uefi', 'qemu'];
+    const biosSections = ['bios'];
+    const title = document.querySelector('header h1');
+    const subtitle = document.querySelector('header .subtitle');
+    const nav = document.querySelector('header nav');
+    if (course === 'uefi' || course === 'bios') {
+      const keep = course === 'uefi' ? new Set(['overview','setup','uefi','qemu','troubleshooting','resources']) : new Set(['overview','setup','bios','troubleshooting','resources']);
+      document.querySelectorAll('main section[id]').forEach(section => {
+        if (!keep.has(section.id)) section.hidden = true;
+      });
+      if (course === 'uefi') {
+        title.textContent = 'UEFI Bootloader Lab';
+        subtitle.textContent = 'Build a 64-bit EFI application, place it on a FAT disk image, and test it with QEMU and OVMF.';
+        nav.querySelectorAll('a[href="#bios"]').forEach(a => a.hidden = true);
+      } else {
+        title.textContent = 'Legacy BIOS Bootloader Lab';
+        subtitle.textContent = 'Create a 512-byte 16-bit BIOS boot sector with NASM and test it in QEMU.';
+        nav.querySelectorAll('a[href="#uefi"], a[href="#qemu"]').forEach(a => a.hidden = true);
+      }
+      const overviewTitle = document.querySelector('#overview h2');
+      if (overviewTitle) overviewTitle.textContent = course === 'uefi' ? 'What you will build: UEFI' : 'What you will build: Legacy BIOS';
+      document.querySelectorAll('#overview .grid article').forEach(article => {
+        const text = article.textContent.toLowerCase();
+        article.hidden = course === 'uefi' ? text.includes('legacy bios') : text.includes('uefi');
+        if (course === 'bios' && text.includes('uefi virtual machine')) article.hidden = true;
+      });
+      const warning = document.querySelector('#overview .warning');
+      if (warning) warning.hidden = false;
+    } else {
+      title.textContent = 'UEFI & BIOS Bootloader Lab';
+    }
+  })();
+  </script>
   <footer>
     <p>OSForge · Learn to build operating systems from the ground up.</p>
     <p>Educational examples. Test boot code in virtual machines before using physical hardware.</p>
