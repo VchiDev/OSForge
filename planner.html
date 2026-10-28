@@ -3,94 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Plan an operating-system development path with OSForge.">
   <title>OS Planner — OSForge</title>
   <link rel="stylesheet" href="styles.css">
   <script src="site.js" defer></script>
+  <style>
+    .roadmap-list { padding-left: 1.4rem; }
+    .roadmap-list li { margin: .65rem 0; }
+    .course-links { display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1rem; }
+    .course-links a { display:inline-block; padding:.7rem 1rem; border:1px solid var(--border, #526078); border-radius:.65rem; text-decoration:none; }
+    .notice { padding:1rem; border-left:4px solid #e4b85d; margin:1rem 0; }
+    .result h2 { margin-top:0; }
+  </style>
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="index.html">◈ OSForge</a>
-  <nav>
+  <nav aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="start.html">Tutorial</a>
-    <a href="planner.html">OS Planner</a>
+    <a href="planner.html" aria-current="page">OS Planner</a>
     <a href="linux-kernel.html">Linux Kernel</a>
-    <a href="efi-bootloader.html">EFI Bootloaders</a>
+    <a href="efi-bootloader.html?course=uefi">UEFI Bootloader</a>
+    <a href="efi-bootloader.html?course=bios">BIOS Boot Sector</a>
     <a href="demos.html">Demo OSes</a>
   </nav>
 </header>
-
 <main class="container">
   <span class="eyebrow">DESIGN YOUR DEVELOPMENT PATH</span>
   <h1>What kind of OS do you want?</h1>
-  <p>Describe your goal and OSForge will suggest the order in which to
-  learn and build the major components.</p>
+  <p>Choose your goal and development environment. OSForge will create a roadmap and send you to the matching course page.</p>
 
   <form id="needs-form" class="card">
-    <div class="field">
-      <label for="kernel">Kernel type</label>
-      <select id="kernel">
+    <div class="field"><label for="kernel">Project type</label>
+      <select id="kernel" name="kernel">
         <option value="linux">Linux-based kernel / distribution</option>
-        <option value="custom">Custom kernel from scratch</option>
+        <option value="custom" selected>Custom kernel from scratch</option>
         <option value="unsure">Not sure yet</option>
       </select>
     </div>
-
-    <div class="field">
-      <label for="purpose">Main purpose</label>
-      <select id="purpose">
-        <option value="learning">Learning OS development</option>
-        <option value="desktop">Desktop operating system</option>
-        <option value="server">Server operating system</option>
-        <option value="embedded">Embedded or appliance OS</option>
-        <option value="retro">Retro or experimental OS</option>
+    <div class="field"><label for="purpose">Main purpose</label>
+      <select id="purpose" name="purpose">
+        <option value="learning">Learning OS development</option><option value="desktop">Desktop operating system</option><option value="server">Server operating system</option><option value="embedded">Embedded or appliance OS</option><option value="retro">Retro or experimental OS</option>
       </select>
     </div>
-
-    <div class="field">
-      <label for="architecture">Target architecture</label>
-      <select id="architecture">
-        <option value="x86_64">x86_64</option>
-        <option value="x86">32-bit x86</option>
-        <option value="arm64">ARM64 / AArch64</option>
-        <option value="unknown">Help me choose</option>
-      </select>
+    <div class="field"><label for="architecture">Target architecture</label>
+      <select id="architecture" name="architecture"><option value="x86_64">x86_64</option><option value="x86">32-bit x86</option><option value="arm64">ARM64 / AArch64</option><option value="unknown">Help me choose</option></select>
     </div>
-
-    <div class="field">
-      <label for="firmware">Boot method</label>
-      <select id="firmware">
-        <option value="uefi">UEFI</option>
-        <option value="bios">Legacy BIOS</option>
-        <option value="either">No preference</option>
-      </select>
+    <div class="field"><label for="firmware">Boot method</label>
+      <select id="firmware" name="firmware"><option value="uefi">UEFI</option><option value="bios">Legacy BIOS</option><option value="either">No preference yet</option></select>
     </div>
-
-    <div class="field">
-      <label for="language">Main implementation language</label>
-      <select id="language">
-        <option value="c">C with assembly where necessary</option>
-        <option value="rust">Rust with assembly where necessary</option>
-        <option value="cpp">C++ with assembly where necessary</option>
-        <option value="linux">Use existing Linux source and tools</option>
-      </select>
+    <div class="field"><label for="language">Main implementation language</label>
+      <select id="language" name="language"><option value="c">C with assembly where necessary</option><option value="rust">Rust with assembly where necessary</option><option value="cpp">C++ with assembly where necessary</option><option value="linux">Use existing Linux source and tools</option></select>
     </div>
-
-    <div class="field">
-      <label for="level">Experience</label>
-      <select id="level">
-        <option value="beginner">Beginner</option>
-        <option value="intermediate">Some programming experience</option>
-        <option value="advanced">Experienced developer</option>
-      </select>
+    <div class="field"><label for="environment">Development environment</label>
+      <select id="environment" name="environment"><option value="wsl">Ubuntu on WSL</option><option value="linux">Native Linux</option><option value="windows">Native Windows</option><option value="macos">macOS</option></select>
     </div>
-
+    <div class="field"><label for="level">Experience</label>
+      <select id="level" name="level"><option value="beginner">Beginner</option><option value="intermediate">Some programming experience</option><option value="advanced">Experienced developer</option></select>
+    </div>
     <button class="button" type="submit">Generate my roadmap</button>
   </form>
-
   <section id="plan-result" class="result" hidden aria-live="polite"></section>
 </main>
-
-<footer>OSForge — Your requirements determine your roadmap.</footer>
+<footer>OSForge — Your requirements determine your roadmap. Course compatibility labels reflect the currently documented test coverage.</footer>
+<script>
+(() => {
+  const form = document.getElementById('needs-form');
+  const result = document.getElementById('plan-result');
+  const labels = {
+    kernel: {linux:'Linux-based kernel / distribution',custom:'Custom kernel from scratch',unsure:'Still exploring'},
+    purpose:{learning:'Learning OS development',desktop:'Desktop OS',server:'Server OS',embedded:'Embedded / appliance OS',retro:'Retro / experimental OS'},
+    architecture:{x86_64:'x86_64',x86:'32-bit x86',arm64:'ARM64 / AArch64',unknown:'Architecture not chosen'},
+    firmware:{uefi:'UEFI',bios:'Legacy BIOS',either:'No preference'},
+    language:{c:'C + assembly',rust:'Rust + assembly',cpp:'C++ + assembly',linux:'Linux source/tooling'},
+    environment:{wsl:'Ubuntu on WSL',linux:'Native Linux',windows:'Native Windows',macos:'macOS'},
+    level:{beginner:'Beginner',intermediate:'Some programming experience',advanced:'Experienced developer'}
+  };
+  function link(href, text) { const a=document.createElement('a'); a.href=href; a.textContent=text; return a; }
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    const steps = [];
+    let primaryHref, primaryText;
+    if (data.kernel === 'linux') {
+      primaryHref = 'linux-kernel.html'; primaryText = 'Open Linux Kernel course';
+      steps.push('Choose a Linux distribution and review its kernel build requirements.','Install the compiler, build dependencies, and source-management tools for your environment.','Configure and build the kernel using the Linux Kernel course.','Test in a virtual machine before considering physical hardware.');
+    } else if (data.kernel === 'custom') {
+      primaryHref = data.firmware === 'bios' ? 'efi-bootloader.html?course=bios' : 'efi-bootloader.html?course=uefi';
+      primaryText = data.firmware === 'bios' ? 'Open Legacy BIOS Bootloader course' : 'Open UEFI Bootloader course';
+      steps.push('Set up a compiler and assembler in your selected environment.','Build and test a boot path that matches your chosen firmware.','Create a kernel entry point and establish a reliable handoff from the bootloader.','Add early output, memory management, interrupts, and drivers in small testable stages.');
+      if (data.firmware === 'either') steps[0] = 'Compare UEFI and legacy BIOS, then choose a boot path; this plan starts with the UEFI lab by default.';
+    } else {
+      primaryHref = 'start.html'; primaryText = 'Explore the OSForge starting tutorial';
+      steps.push('Compare Linux-based development with building a custom kernel.','Try the bootloader introduction to learn how firmware starts software.','Return to this planner when you have chosen a project type.');
+    }
+    const environmentNote = data.environment === 'wsl'
+      ? 'Ubuntu/WSL is the reference environment for the documented UEFI lab. Individual machines and package versions may still differ.'
+      : 'This environment is not verified by the current OSForge lab notes. Treat commands and package names as examples and check the relevant platform documentation.';
+    if (data.architecture === 'arm64') steps.unshift('Check architecture compatibility first: the current UEFI example creates an x86-64 EFI application, so it is not a ready-made ARM64 build.');
+    if (data.architecture === 'x86') steps.unshift('Check architecture compatibility first: the documented UEFI example is x86-64; the BIOS example uses 16-bit x86 code.');
+    result.replaceChildren(); result.hidden = false;
+    const h=document.createElement('h2'); h.textContent='Your OSForge roadmap'; result.appendChild(h);
+    const summary=document.createElement('p'); summary.textContent=`${labels.kernel[data.kernel]} · ${labels.purpose[data.purpose]} · ${labels.architecture[data.architecture]} · ${labels.firmware[data.firmware]} · ${labels.language[data.language]} · ${labels.environment[data.environment]} · ${labels.level[data.level]}`; result.appendChild(summary);
+    const notice=document.createElement('p'); notice.className='notice'; notice.textContent=environmentNote; result.appendChild(notice);
+    const heading=document.createElement('h3'); heading.textContent='Recommended milestones'; result.appendChild(heading);
+    const ol=document.createElement('ol'); ol.className='roadmap-list'; steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;ol.appendChild(li)}); result.appendChild(ol);
+    const links=document.createElement('div'); links.className='course-links'; links.appendChild(link(primaryHref,primaryText)); links.appendChild(link('planner.html','Edit my plan')); result.appendChild(links);
+    const note=document.createElement('p'); note.className='muted'; note.textContent='This roadmap is a learning guide, not a verified build guarantee. The current bootloader lab is documented for Ubuntu/Debian/WSL; other environments need validation.'; result.appendChild(note);
+    result.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+})();
+</script>
 </body>
 </html>
